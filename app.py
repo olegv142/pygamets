@@ -1,6 +1,7 @@
 import os
 import pygame as pg
 from events import read_events
+import calibration
 
 # Stop reading events by pygame engine to avoid erratic mouse pointer behaviour
 os.putenv('SDL_MOUSEDEV', '/dev/null')
@@ -14,6 +15,7 @@ class Application(object):
 		inf = pg.display.Info()
 		self.screen_w = inf.current_w
 		self.screen_h = inf.current_h
+		self.calib = calibration.load()
 		self.pygame_get_events = pg.event.get
 		self.event_loop_callback = None
 		pg.event.get = self.get_events
@@ -43,7 +45,7 @@ class Application(object):
 					events.append(pg.event.Event(pg.MOUSEBUTTONUP, button=1, pos=self.mouse_pos))
 					self.mouse_down = False
 			if e.pos is not None:
-				screen_pos = self.raw_pos_to_screen(e.pos)
+				screen_pos = calibration.to_screen(e.pos, (self.screen_w, self.screen_h), self.calib)
 				if self._down:
 					if not self.mouse_down:
 						events.append(pg.event.Event(pg.MOUSEBUTTONDOWN, button=1, pos=screen_pos))
