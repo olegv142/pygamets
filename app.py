@@ -2,6 +2,7 @@ import os
 import pygame as pg
 from events import read_events
 
+# Stop reading events by pygame engine to avoid erratic mouse pointer behaviour
 os.putenv('SDL_MOUSEDEV', '/dev/null')
 
 class Application(object):
@@ -29,6 +30,9 @@ class Application(object):
 
 	def get_events(self):
 		"""Query events. This is the replacement for the pygame.event.get"""
+		if self.event_loop_callback:
+			self.event_loop_callback()
+
 		events = self.pygame_get_events()
 		sys_events = read_events()
 
@@ -50,8 +54,5 @@ class Application(object):
 						))
 				self.mouse_pos = screen_pos
 				pg.mouse.set_pos(*screen_pos)
-
-		if self.event_loop_callback:
-			self.event_loop_callback()
 
 		return events
