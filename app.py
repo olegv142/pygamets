@@ -9,13 +9,17 @@ provides several useful capabilities:
 Note that all above facilities are available regardless of the
 particular event loop implementation. So this gives rather flexible
 approach to extending existing code capabilities.
+On win32 platform the code implements above facilities without
+patching pygame event path.
 """
 
-import os
+import sys, os
 import threading
 import pygame as pg
-from events import read_events
-import calibration
+
+patch_events = sys.platform != 'win32'
+if patch_events:
+	import events, calibration
 
 # Application instance
 instance = None
@@ -25,6 +29,10 @@ def init():
 	if instance is not None:
 		return instance
 	return Application()
+
+def fini():
+	if instance:
+		instance.fini()
 
 class Timer(object):
 	"""Timer object to be called in the context of the event loop"""
@@ -43,13 +51,6 @@ class Application(object):
 		global instance
 		assert instance is None
 		self.pygame_init()
-		inf = pg.display.Info()
-		self.screen_w = inf.current_w
-		self.screen_h = inf.current_h
-		self.mouse_pos = None
-		self.mouse_down = False
-		self._down = None
-		self.calib = calibration.load()
 		self.event_loop_callbacks = []
 		self.job_lock = threading.Lock()
 		self.job_list = []
@@ -59,14 +60,32 @@ class Application(object):
 	def pygame_init(self):
 		"""Proper initialize pygame module"""
 		# stop reading events by pygame engine to avoid erratic mouse pointer behaviour
-		os.putenv('SDL_MOUSEDEV', '/dev/null')
+		if patch_events:
+			os.putenv('SDL_MOUSEDEV', '/dev/null')
 		pg.init()
-		pg.display.init()
-		pg.display.set_mode()
-		pg.event.set_blocked((pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP, pg.MOUSEMOTION))
+		if patch_events:
+			pg.event.set_blocked((pg.MOUSEBUTTONDOWN, pg.MOUSEBUTTONUP, pg.MOUSEMOTION))
+			self.calib = calibration.load()
+			inf = pg.display.Info()
+			self.screen_w = inf.current_w
+			self.screen_h = inf.current_h
+			self.mouse_pos = None
+			self.mouse_down = False
+			self._down = None
 		# install event filter
 		self.pygame_get_events = pg.event.get
 		pg.event.get = self.get_events
+
+	def fini(self):
+		"""Deinitialize pygame module"""
+		global instance
+		assert instance is not None
+		assert self.pygame_get_events is not None
+		instance = None
+		pg.quit()
+		# remove event filter
+		pg.event.get = self.pygame_get_events
+		self.pygame_get_events = None
 
 	def add_event_loop_callback(self, cb):
 		"""Add callback to be called in event loop context"""
@@ -119,32 +138,38 @@ class Application(object):
 		if rescheduled:
 			self.timers.sort()
 
+	def read_events(self):
+		evs, sys_evs = [], events.read_events()
+		for e in sys_evs:
+			if e.down is not None:
+				self._down = e.down	
+				if not self._down and self.mouse_down and self.mouse_pos:
+					evs.append(pg.event.Event(pg.MOUSEBUTTONUP, button=1, pos=self.mouse_pos))
+					self.mouse_down = False
+			if e.pos is not None:
+				screen_pos = calibration.to_screen(e.pos, (self.screen_w, self.screen_h), self.calib)
+				if self._down:
+					if not self.mouse_down:
+						evs.append(pg.event.Event(pg.MOUSEBUTTONDOWN, button=1, pos=screen_pos))
+						self.mouse_down = True
+					elif self.mouse_pos and self.mouse_pos != screen_pos:
+						evs.append(pg.event.Event(
+							pg.MOUSEMOTION, buttons=(1, 0, 0), pos=screen_pos, rel=(screen_pos[0]-self.mouse_pos[0], screen_pos[1]-self.mouse_pos[1])
+						))
+				self.mouse_pos = screen_pos
+				pg.mouse.set_pos(*screen_pos)
+
+		return evs
+
 	def get_events(self):
 		"""Query events filter. This is the replacement for the pygame.event.get"""
 		self.run_callbacks()
 		self.run_jobs()
 		self.process_timers()
 
-		events = self.pygame_get_events()
-		sys_events = read_events()
+		evs = self.pygame_get_events()
 
-		for e in sys_events:
-			if e.down is not None:
-				self._down = e.down	
-				if not self._down and self.mouse_down and self.mouse_pos:
-					events.append(pg.event.Event(pg.MOUSEBUTTONUP, button=1, pos=self.mouse_pos))
-					self.mouse_down = False
-			if e.pos is not None:
-				screen_pos = calibration.to_screen(e.pos, (self.screen_w, self.screen_h), self.calib)
-				if self._down:
-					if not self.mouse_down:
-						events.append(pg.event.Event(pg.MOUSEBUTTONDOWN, button=1, pos=screen_pos))
-						self.mouse_down = True
-					elif self.mouse_pos and self.mouse_pos != screen_pos:
-						events.append(pg.event.Event(
-							pg.MOUSEMOTION, buttons=(1, 0, 0), pos=screen_pos, rel=(screen_pos[0]-self.mouse_pos[0], screen_pos[1]-self.mouse_pos[1])
-						))
-				self.mouse_pos = screen_pos
-				pg.mouse.set_pos(*screen_pos)
+		if patch_events:
+			evs += self.read_events()
 
-		return events
+		return evs

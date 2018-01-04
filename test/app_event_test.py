@@ -11,7 +11,6 @@ def print_event(e):
 		print e
 	return fn
 
-app.init()
 cnt, last_cnt = 0, 0
 
 def loop_counter():
@@ -23,11 +22,12 @@ def loop_timer():
 	print cnt - last_cnt, 'loops per second'
 	last_cnt = cnt
 
+app.init()
 app.instance.add_event_loop_callback(loop_counter)
 app.instance.add_timer(app.Timer(loop_timer, 1000, periodic=True))
+pg.display.set_mode()
 
 while True:
 	time.sleep(.01)
 	for e in pg.event.get():
 		app.instance.add_job(print_event(e))
-
