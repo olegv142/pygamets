@@ -6,7 +6,7 @@ import styles
 
 class Style(object):
 	"""
-	The style object serve 2 purposes:
+	The style object serves 2 purposes:
 	- it allows for setting any number of arbitrary named attributes in constructor
 	  and serves as container for passing them to the GUI element constructor
 	- it supports getting attributes that was not set explicitly by means of
@@ -29,6 +29,7 @@ class Style(object):
 		except KeyError:
 			pass
 		v = Style._lookup_default(self._owner, self._attrs.get('name', None), key)
+		# store lookup result to speed up subsequent lookups of the same key
 		self._attrs[key] = v
 		return v
 
