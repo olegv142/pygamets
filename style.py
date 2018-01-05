@@ -23,6 +23,12 @@ class Style(object):
 		"""
 		self._owner = owner
 
+	def __str__(self):
+		return str(self._attrs)
+
+	def __repr__(self):
+		return 'Style(' + repr(self._owner) + ',' + repr(self._attrs) + ')'
+
 	def __getattribute__(self, key):
 		"""The method called on attribute resolution"""
 		try:
