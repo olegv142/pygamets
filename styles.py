@@ -13,7 +13,7 @@ See style.py for lookup algorithm details.
 
 default = {
 	'*' : {
-		'border' : 2,
+		'border' : 1,
 		'font_face' : 'Arial',
 		'font_size' : 32
 	},
@@ -57,4 +57,11 @@ default = {
 		'batt_color'   : (100, 100, 100),
 		't_color'      : (255, 255, 255)
 	},
+	'PieProgressIndicator' : {
+		'done_color'  : (0, 255, 0),
+		'todo_color'  : (100, 100, 100),
+		'interval'    : 50,
+		'period'      : 100,
+		'f_color'     : (0, 0, 255), # fill color
+	}
 }
