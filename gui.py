@@ -73,7 +73,7 @@ class View(object):
 
 	def fini(self):
 		"""Finalization routine called on removing from the screen"""
-		pass
+		self.surface = None
 
 	def get_window(self):
 		"""Returns window object"""
@@ -104,6 +104,8 @@ class View(object):
 
 	def update(self):
 		"""Redraw if visible on the screen"""
+		if self.surface is None:
+			return
 		s = self.get_screen()
 		if s.is_visible(self):
 			self.redraw()
