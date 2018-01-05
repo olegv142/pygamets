@@ -120,10 +120,13 @@ class View(object):
 			updated = [self.rect_to_screen(rect)] + [c.frame() for c in updated_children]
 			s.set_updated(updated)
 
-	def blit_centered(self, surf):
+	def blit_centered(self, surf, rect = None):
 		"""Blit given image surface centred in the view area"""
-		w, h = surf.get_size()
-		self.surface.blit(surf, (self.screen_x + (self.w - w) // 2, self.screen_y + (self.h - h) // 2))
+		if rect is None:
+			rect = self.frame()
+		x, y, w, h = rect
+		sw, sh = surf.get_size()
+		self.surface.blit(surf, (x + (w - sw) // 2, y + (h - sh) // 2))
 
 	def find_interactive(self, pos):
 		"""Find interactive view at given screen position"""
