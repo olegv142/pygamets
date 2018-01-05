@@ -14,9 +14,8 @@ See style.py for lookup algorithm details.
 default = {
 	'*' : {
 		'border' : 2,
-		't_color' : (0, 0, 0),  # text color
 		'font_face' : 'Arial',
-		'font_size' : 72
+		'font_size' : 32
 	},
 	'RectButton' : {
 		'f_color' : (0, 255, 0), # fill color
@@ -26,26 +25,36 @@ default = {
 	'TextButton' : {
 		't_color'  : (0, 255, 0),  # text color
 		'tp_color' : (0, 100, 0),  # text color in pressed state
-		'font_size' : 32
 	},
 	'TextButton[Ok]' : {
 		't_color'  : (255, 255, 0),  # text color
 		'tp_color' : (100, 100, 0),  # text color in pressed state
-		'font_size' : 32
 	},
 	'PulseTextButton' : {
 		't1_color'  : (0, 255, 0),
 		't0_color'  : (0, 0, 255),
 		'tp_color'  : (0, 100, 0),  # text color in pressed state
-		'font_size' : 32,
 		'interval'  : 50,
 		'period'    : 100,
 		'decay'     : 30,
+	},
+	'Window.PulseTextButton[Ok]' : {
+		't1_color'  : (255, 255, 0)
 	},
 	'XButton' : {
 		'x_color'  : (0, 255, 0),  # X mark color
 		'xp_color' : (0, 100, 0),  # X mark color in pressed state
 		'x_width'  : 4,            # X mark line width
 		'x_margin' : .2            # X mark margin relative to the button width
+	},
+	'BatteryIndicator' : {
+		'roundness'    : .15,
+		'tip_height'   : .1,
+		'tip_diameter' : .5,
+		'alert_charge' : .1,
+		'charge_color' : (0, 255, 0),
+		'alert_color'  : (255, 0, 0),
+		'batt_color'   : (100, 100, 100),
+		't_color'      : (255, 255, 255)
 	},
 }
