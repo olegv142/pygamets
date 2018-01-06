@@ -9,7 +9,7 @@ from localize import localize
 class StyledButton(gui.Button):
 	def __init__(self, w, h, st = None):
 		gui.Button.__init__(self, w, h)
-		self.style = style.bind(st, self)
+		self.style = style.bind(self, st)
 		self.pressed.connect(self.pressed_cb)
 
 	def pressed_cb(self, pressed):
@@ -34,7 +34,7 @@ class RectButton(StyledButton):
 		pg.draw.rect(self.surface, color, rect)
 		if self.style.border:
 			pg.draw.rect(self.surface, self.style.b_color, rect, self.style.border)
-		if self.label is not None:
+		if self.label:
 			utils.blit_centered(self.surface, self.label, self.frame())
 
 class TextButton(StyledButton):

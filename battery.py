@@ -11,22 +11,22 @@ class BatteryIndicator(gui.View):
 	"""
 	def __init__(self, w, h, st = None):
 		gui.View.__init__(self, w, h)
-		self.style = style.bind(st, self)
+		self.style = style.bind(self, st)
 		self.charge = 0
 		self.font = None
 		self.text = None
 
 	def init(self, surface):
 		gui.View.init(self, surface)
-		ff = self.style.font_face
-		if ff:
-			self.font = pg.font.SysFont(ff, self.style.font_size)
+		if self.style.font_face:
+			self.font = pg.font.SysFont(self.style.font_face, self.style.font_size)
+			self.text = self.font.render('%d%%' % int(100*self.charge), True, self.style.t_color)
 
 	def set_charge(self, val):
 		"""Set charge level as floating point in range 0..1"""
 		self.charge = max(0., min(1., val))
 		if self.font:
-			self.text = self.font.render('%d%%' % int(100*val), True, self.style.t_color)
+			self.text = self.font.render('%d%%' % int(100*self.charge), True, self.style.t_color)
 		self.update()
 
 	def draw(self):

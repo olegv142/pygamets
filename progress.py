@@ -12,7 +12,7 @@ class PieProgressIndicator(gui.View):
 	"""
 	def __init__(self, w, st = None):
 		gui.View.__init__(self, w, w)
-		self.style = style.bind(st, self)
+		self.style = style.bind(self, st)
 		self.progress = 0.
 		self.rotating = False
 		self.phase = 0

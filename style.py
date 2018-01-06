@@ -42,13 +42,13 @@ class Style(object):
 		except KeyError:
 			pass
 		# lookup default values in global registry
-		v = Style._lookup_default(self._owner, self._attrs.get('name', None), key)
+		v = Style._lookup_default(self._owner, self._attrs.get('name', None), self._attrs.get('tag', None), key)
 		# store lookup result to speed up subsequent lookups of the same key
 		self._attrs[key] = v
 		return v
 
 	@staticmethod
-	def _lookup_default(obj, name, key, path = ''):
+	def _lookup_default(obj, name, tag, key, path = ''):
 		"""Lookup default value for the given object / key pair"""
 		assert obj is not None
 		# Lookup the most specific path first
@@ -58,11 +58,11 @@ class Style(object):
 			except AttributeError:
 				parent = None
 			if parent:
-				v = Style._lookup_default(parent, name, key, type(parent).__name__ + '.' + path)
+				v = Style._lookup_default(parent, name, tag, key, type(parent).__name__ + '.' + path)
 				if v is not None:
 					return v
 		else:
-			v = Style._lookup_default(obj, name, key, type(obj).__name__)
+			v = Style._lookup_default(obj, name, tag, key, type(obj).__name__)
 			if v is not None:
 				return v
 			path = '*'
@@ -71,13 +71,18 @@ class Style(object):
 				return styles.default[path+'['+name+']'][key]
 			except KeyError:
 				pass
+		if tag is not None:
+			try:
+				return styles.default[path+'#'+tag][key]
+			except KeyError:
+				pass
 		try:
 			return styles.default[path][key]
 		except KeyError:
 			pass
 		return None
 
-def bind(seed, obj):
+def bind(obj, seed = None):
 	"""Bind style object to the owner creating it if necessary. Returns bound style object."""
 	if seed is None:
 		seed = Style()
