@@ -1,2 +1,4 @@
 # pygame-ts
-Touch screen support for pygame frame-buffer applications
+
+GUI micro-framework with touch screen support for pygame frame-buffer applications
+

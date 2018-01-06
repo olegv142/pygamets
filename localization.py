@@ -5,5 +5,5 @@ Localized strings dictionary
 """
 
 default = {
-	'Ok' : u'Да'
+	'START' : u'СТАРТ'
 }
