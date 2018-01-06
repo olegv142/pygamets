@@ -2,7 +2,7 @@
 Button classes
 """
 
-import app, gui, style
+import app, gui, style, utils
 import pygame as pg
 from localize import localize
 
@@ -35,7 +35,7 @@ class RectButton(StyledButton):
 		if self.style.border:
 			pg.draw.rect(self.surface, self.style.b_color, rect, self.style.border)
 		if self.label is not None:
-			self.blit_centered(self.label)
+			utils.blit_centered(self.surface, self.label, self.frame())
 
 class TextButton(StyledButton):
 	"""The Button with only text label drawn"""
@@ -52,7 +52,7 @@ class TextButton(StyledButton):
 
 	def draw(self):
 		label = self.label if not self.is_pressed else self.p_label
-		self.blit_centered(label)
+		utils.blit_centered(self.surface, label, self.frame())
 
 class XButton(StyledButton):
 	"""The X-mark button"""
@@ -61,7 +61,7 @@ class XButton(StyledButton):
 
 	def draw(self):
 		color = self.style.x_color if not self.is_pressed else self.style.xp_color
-		x, y, w, h = self.frame_with_margin(int(self.style.x_margin * self.w), int(self.style.x_margin * self.h))
+		x, y, w, h = utils.apply_margins(self.frame(), int(self.style.x_margin * self.w), int(self.style.x_margin * self.h))
 		pg.draw.line(self.surface, color, (x, y), (x + w, y + h), self.style.x_width)
 		pg.draw.line(self.surface, color, (x + w, y), (x, y + h), self.style.x_width)
 
@@ -104,4 +104,5 @@ class PulseTextButton(StyledButton):
 			l0.fill((255-p, 255-p, 255-p), None, pg.BLEND_RGB_MULT)
 			l1.blit(l0, (0, 0), None, pg.BLEND_RGB_ADD)
 			label = l1
-		self.blit_centered(label)
+
+		utils.blit_centered(self.surface, label, self.frame())

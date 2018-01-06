@@ -2,7 +2,7 @@
 Battery charge indicator
 """
 
-import app, gui, style
+import app, gui, style, utils
 import pygame as pg
 
 class BatteryIndicator(gui.View):
@@ -65,5 +65,5 @@ class BatteryIndicator(gui.View):
 		pg.draw.rect  (self.surface, batt_color,   (x + r + c, y, l - c, h))
 
 		if self.text:
-			self.blit_centered(self.text, (x, y, b, h))
+			utils.blit_centered(self.surface, self.text, (x, y, b, h))
 

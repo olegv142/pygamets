@@ -3,7 +3,7 @@ Progress indicator widget
 """
 
 import pygame as pg
-import app, gui, style
+import app, gui, style, utils
 import math
 
 class PieProgressIndicator(gui.View):
@@ -57,15 +57,9 @@ class PieProgressIndicator(gui.View):
 		pg.draw.circle(self.surface, self.style.todo_color, center, r)
 		if self.progress <= 0:
 			return
-		# draw a pie as filled polygon
 		progress_angle = self.progress * 2 * math.pi
 		start_angle = (2 * math.pi * self.phase) / self.style.period
-		segments = 1 + int(self.progress * 4 * r)
-		da = progress_angle / segments
-		angles = [start_angle + da*i for i in range(segments+1)]
-		pointlist = [(x + int(r*(1 + math.sin(a))), y + int(r*(1 - math.cos(a)))) for a in angles]
-		pointlist.append(center)
-		pg.draw.polygon(self.surface, self.style.done_color, pointlist)
-
-
-
+		utils.draw_sector(
+				self.surface, self.style.done_color, center, r,
+				start_angle, start_angle + progress_angle
+			)

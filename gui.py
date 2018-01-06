@@ -45,10 +45,6 @@ class View(object):
 		"""Returns the occupied rectangle coordinates in screen coordinate system"""
 		return self.screen_x, self.screen_y, self.w, self.h
 
-	def frame_with_margin(self, x_margin, y_margin):
-		"""Same as above but reserving the margin at all sides"""
-		return self.screen_x + x_margin, self.screen_y + y_margin, self.w - 2*x_margin, self.h - 2*y_margin
-
 	def rect_to_screen(self, (x, y, w, h)):
 		"""Translates rectangle coordinates to the screen coordinate system"""
 		return self.screen_x + x, self.screen_y + y, w, h
@@ -121,14 +117,6 @@ class View(object):
 		else:
 			updated = [self.rect_to_screen(rect)] + [c.frame() for c in updated_children]
 			s.set_updated(updated)
-
-	def blit_centered(self, surf, rect = None):
-		"""Blit given image surface centred in the view area"""
-		if rect is None:
-			rect = self.frame()
-		x, y, w, h = rect
-		sw, sh = surf.get_size()
-		self.surface.blit(surf, (x + (w - sw) // 2, y + (h - sh) // 2))
 
 	def find_interactive(self, pos):
 		"""Find interactive view at given screen position"""
