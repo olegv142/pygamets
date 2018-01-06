@@ -4,6 +4,7 @@
 Generic measuring device GUI example
 """
 
+import env
 import app, gui, button, label, battery, progress, window, style
 import pygame, time, threading, functools
 from style import Style
