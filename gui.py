@@ -67,6 +67,9 @@ class View(object):
 		self.surface = surface
 		self.screen_x, self.screen_y = self.origin()
 
+	def initialized(self):
+		return self.surface is not None
+
 	def fini(self):
 		"""Finalization routine called on removing from the screen"""
 		self.surface = None
@@ -100,7 +103,7 @@ class View(object):
 
 	def update(self):
 		"""Redraw if visible on the screen"""
-		if self.surface is None:
+		if not self.initialized():
 			return
 		s = self.get_screen()
 		if s.is_visible(self):
@@ -170,6 +173,10 @@ class Window(View):
 		if self.in_focus is not None:
 			self.in_focus.set_focus(False)
 		self.in_focus = None
+
+	def discard(self):
+		"""Remove window from the screen"""
+		self.get_screen().discard(self)
 
 	def fini(self):
 		"""Finalization routine called on removing window from the screen"""
@@ -324,10 +331,6 @@ class Screen(object):
 		else:
 			return None
 
-	def quit(self):
-		"""Quit event loop by posting QUIT event"""
-		pg.event.post(pg.event.Event(pg.QUIT))
-
 class Signal(object):
 	"""The signal is callable object with callback registry"""
 	def __init__(self):
@@ -367,3 +370,6 @@ class Button(View):
 		View.set_focus(self, in_focus)
 		self.focus_changed(in_focus)
 
+def quit():
+	"""Quit event loop by posting QUIT event"""
+	pg.event.post(pg.event.Event(pg.QUIT))
