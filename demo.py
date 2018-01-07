@@ -44,7 +44,7 @@ class Demo(object):
 		self.s_remaining  = None # Remaining time
 		self.s_result     = None # Result screen
 		self.style        = style.bind(self)
-		self.worker       = threading.Thread(target = self.work_loop)
+		self.worker       = threading.Thread(target = self.x_worker)
 		self.worker.daemon= True
 		self.start_time   = None
 		self.start_evt    = threading.Event()
@@ -89,14 +89,26 @@ class Demo(object):
 		self.s_action.add_child(self.s_progress, (height - progress_sz) / 2, (height - progress_sz) / 2)
 		self.screen.show(self.s_action)
 
+	def x_show_activity_screen(self):
+		"""Show activity screen from worker thread"""
+		app.instance.add_job(self.show_activity_screen)
+		
 	def show_progress(self, val, rotating):
 		"""Show progress on activity screen"""
 		self.s_progress.set_progress(val, rotating)
+
+	def x_show_progress(self, val, rotating):
+		"""Show progress from worker thread"""
+		app.instance.add_job(functools.partial(self.show_progress, val, rotating))
 
 	def close_activity_screen(self):
 		"""Close activity screen"""
 		self.s_progress = None
 		self.s_action.discard()
+
+	def x_close_activity_screen(self):
+		"""Close activity screen from worker thread"""
+		app.instance.add_job(self.close_activity_screen)
 
 	def show_result_screen(self):
 		"""Show results screen"""
@@ -112,6 +124,10 @@ class Demo(object):
 		s.add_child(txt, padding, padding)
 		self.screen.show(s)
 
+	def x_show_result_screen(self):
+		"""Show results screen from worker thread"""
+		app.instance.add_job(self.show_result_screen)
+
 	def start_activity(self):
 		"""Start button handler"""
 		self.start_evt.set()
@@ -125,13 +141,27 @@ class Demo(object):
 		self.status = sta
 		self.s_status.set_text(sta_names[sta], self.style.status_colors[sta])
 
+	def x_set_status(self, sta):
+		"""Set new status from worker thread"""
+		app.instance.add_job(functools.partial(self.set_status, sta))
+
 	def show_info(self, text, lvl):
 		"""Show info on bottom panel"""
 		self.s_info.set_text(text, self.style.info_colors[lvl])
 
+	def x_show_info(self, text, lvl):
+		"""Show info from worker thread"""
+		app.instance.add_job(functools.partial(self.show_info, text, lvl))
+
 	def x_initialize(self):
 		"""Experiment initialize"""
 		time.sleep(1)
+
+	def x_wait_start(self):
+		"""Wait for start request"""
+		self.start_evt.wait()
+		self.start_evt.clear()
+		self.stop_evt.clear()
 
 	def x_prepare(self):
 		"""Experiment prepare, returns expected duration"""
@@ -147,33 +177,31 @@ class Demo(object):
 		"""Complete experiment / process results"""
 		time.sleep(2)
 
-	def work_loop(self):
+	def x_worker(self):
 		"""
 		Worker thread running experiments.
-		Note that is uses special asynchronous mechanisms - events and jobs for
+		It uses special asynchronous mechanisms - events and jobs for
 		communicating with GUI event loop.
 		"""
-		app.instance.add_job(functools.partial(self.set_status, sta_initializing))
-		app.instance.add_job(functools.partial(self.show_info, 'connecting to device', inf_normal))
+		self.x_set_status(sta_initializing)
+		self.x_show_info('connecting to device', inf_normal)
 		self.x_initialize()
-		app.instance.add_job(functools.partial(self.set_status, sta_ready))
-		app.instance.add_job(functools.partial(self.show_info, 'connected to device', inf_normal))
+		self.x_set_status(sta_ready)
+		self.x_show_info('connected to device', inf_normal)
 
 		while True:
-			self.start_evt.wait()
-			self.start_evt.clear()
-			self.stop_evt.clear()
+			self.x_wait_start()
 
-			app.instance.add_job(functools.partial(self.set_status, sta_busy))
-			app.instance.add_job(functools.partial(self.show_info, 'measurement starting', inf_normal))
-			app.instance.add_job(self.show_activity_screen)
+			self.x_set_status(sta_busy)
+			self.x_show_info('measurement starting', inf_normal)
+			self.x_show_activity_screen()
 
 			ini_progress, fin_progress = self.style.ini_progress, self.style.fin_progress
 			progress = ini_progress
-			app.instance.add_job(functools.partial(self.show_progress, progress, True))
+			self.x_show_progress(progress, True)
 
 			xtime = self.x_prepare()
-			app.instance.add_job(functools.partial(self.show_info, 'measuring stuff', inf_normal))
+			self.x_show_info('measuring stuff', inf_normal)
 			self.start_time = time.time()
 			cancelled = False
 
@@ -184,20 +212,20 @@ class Demo(object):
 				if self.x_run():
 					break
 				progress = ini_progress + (1 - ini_progress - fin_progress) * (time.time() - self.start_time) / xtime
-				app.instance.add_job(functools.partial(self.show_progress, progress, False))
+				self.x_show_progress(progress, False)
 
 			if not cancelled:
-				app.instance.add_job(functools.partial(self.show_progress, progress, True))
-				app.instance.add_job(functools.partial(self.show_info, 'processing results', inf_normal))
+				self.x_show_progress(progress, True)
+				self.x_show_info('processing results', inf_normal)
 				self.x_complete()
 
-			app.instance.add_job(self.close_activity_screen)
-			app.instance.add_job(functools.partial(self.set_status, sta_ready))
+			self.x_close_activity_screen()
+			self.x_set_status(sta_ready)
 			if not cancelled:
-				app.instance.add_job(functools.partial(self.show_info, 'measuring completed', inf_normal))
-				app.instance.add_job(self.show_result_screen)
+				self.x_show_info('measuring completed', inf_normal)
+				self.x_show_result_screen()
 			else:
-				app.instance.add_job(functools.partial(self.show_info, 'measuring cancelled', inf_normal))
+				self.x_show_info('measuring cancelled', inf_normal)
 
 	def run(self):
 		"""Run GUI and separate worker thread"""
