@@ -83,6 +83,12 @@ class View(object):
 		"""Returns screen object"""
 		return self.get_window().get_screen()
 
+	def is_visible(self):
+		"""Returns True if visible on the screen"""
+		if not self.initialized():
+			return False
+		return self.get_screen().is_visible(self)
+
 	def draw(self):
 		"""Draw routine to be implemented in subclasses"""
 		pass
@@ -103,23 +109,26 @@ class View(object):
 
 	def update(self):
 		"""Redraw if visible on the screen"""
-		if not self.initialized():
-			return
-		s = self.get_screen()
-		if s.is_visible(self):
+		if self.is_visible():
 			self.redraw()
-			s.set_updated([self.frame()])
+			self.set_updated()
+
+	def set_updated(self, rects = None):
+		"""Notify the screen area updated"""
+		s = self.get_screen()
+		assert s.is_visible(self)
+		if rects is None:
+			rects = [self.frame()]
+		s.set_updated(rects)
 
 	def updated(self, rect = None):
 		"""Notify the area is updated"""
-		s = self.get_screen()
-		assert s.is_visible(self)
 		updated_children = self.redraw_children(rect)
 		if rect is None:
-			s.set_updated([self.frame()])
+			self.set_updated()
 		else:
 			updated = [self.rect_to_screen(rect)] + [c.frame() for c in updated_children]
-			s.set_updated(updated)
+			self.set_updated(updated)
 
 	def find_interactive(self, pos):
 		"""Find interactive view at given screen position"""
