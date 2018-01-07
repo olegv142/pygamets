@@ -1,0 +1,14 @@
+[Service]
+Type=idle
+WorkingDirectory=/home/pi/src/pygame-ts/
+ExecStart=/usr/bin/daemon /usr/bin/python /home/pi/src/pygame-ts/demo.py
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=pygame-ts-demo
+User=root
+Group=root
+Environment=NODE_ENV=production
+[Install]
+WantedBy=multi-user.target
+
