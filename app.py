@@ -40,6 +40,7 @@ class Timer(object):
 		self.cb = cb
 		self.interval = interval
 		self.periodic = periodic
+		self.precise = False
 
 	def cancel(self):
 		"""Cancel timer so it wont be fired anymore"""
@@ -131,7 +132,11 @@ class Application(object):
 				timer.cb()
 			if timer.cb:
 				if timer.periodic:
-					self.timers.append((due + timer.interval, timer))
+					if timer.precise:
+						next = due + timer.interval
+					else:
+						next = now + timer.interval
+					self.timers.append((next, timer))
 					rescheduled = True
 				else:
 					timer.cb = None
