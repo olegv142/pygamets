@@ -39,6 +39,11 @@ default = {
 		'interval'    : 50,
 		'period'      : 100,
 	},
+	'TextLabel#remaining' : {
+		'font_size' : 64,
+		't_color'   : (0, 255, 255), # text color
+		'f_color'   : (0, 0, 255),   # fill color
+	},
 	'TextLabel#result' : {
 		't_color'   : (0, 255, 0), # text color
 		'f_color'   : (0, 0, 255), # fill color

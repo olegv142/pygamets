@@ -87,19 +87,25 @@ class Demo(object):
 		progress_sz = int(height * self.style.progress_sz)
 		self.s_progress = progress.PieProgressIndicator(progress_sz)
 		self.s_action.add_child(self.s_progress, (height - progress_sz) / 2, (height - progress_sz) / 2)
+		self.s_remaining = label.TextLabel(width - (height + progress_sz) / 2, progress_sz, Style(tag='remaining'))
+		self.s_action.add_child(self.s_remaining, (height + progress_sz) / 2, (height - progress_sz) / 2)
 		self.screen.show(self.s_action)
 
 	def x_show_activity_screen(self):
 		"""Show activity screen from worker thread"""
 		app.instance.add_job(self.show_activity_screen)
 		
-	def show_progress(self, val, rotating):
+	def show_progress(self, val, rotating, secs_left = None):
 		"""Show progress on activity screen"""
 		self.s_progress.set_progress(val, rotating)
+		if secs_left is not None:
+			self.s_remaining.set_text(str(secs_left))
+		else:
+			self.s_remaining.set_text(None)
 
-	def x_show_progress(self, val, rotating):
+	def x_show_progress(self, val, rotating, secs_left = None):
 		"""Show progress from worker thread"""
-		app.instance.add_job(functools.partial(self.show_progress, val, rotating))
+		app.instance.add_job(functools.partial(self.show_progress, val, rotating, secs_left))
 
 	def close_activity_screen(self):
 		"""Close activity screen"""
@@ -213,8 +219,10 @@ class Demo(object):
 					break
 				if self.x_run():
 					break
-				progress = ini_progress + (1 - ini_progress - fin_progress) * (time.time() - self.start_time) / xtime
-				self.x_show_progress(progress, False)
+				elapsed = time.time() - self.start_time
+				secs_left = int(xtime - elapsed)
+				progress = ini_progress + (1 - ini_progress - fin_progress) * elapsed / xtime
+				self.x_show_progress(progress, False, secs_left if secs_left > 0 else None)
 
 			if not cancelled:
 				self.x_show_progress(progress, True)

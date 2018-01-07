@@ -27,6 +27,8 @@ class TextLabel(gui.View):
 			self.label = self.font.render(localize(self.text), True, self.color)
 
 	def set_text(self, text, color = None):
+		if text == self.text and color == self.color:
+			return
 		self.text = text
 		if color is not None:
 			self.color = color
