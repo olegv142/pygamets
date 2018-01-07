@@ -7,6 +7,8 @@ import pygame as pg
 
 class BckgWindow(gui.Window):
 	"""Window filling entire screen"""
+	_required_attrs = ('f_color',)
+
 	def __init__(self, st = None):
 		gui.Window.__init__(self, 0, 0, None, None)
 		self.style = style.bind(self, st)
@@ -20,6 +22,8 @@ class BckgWindow(gui.Window):
 
 class FrameWindow(gui.Window):
 	"""Fixed size window with optional border"""
+	_required_attrs = ('f_color',)
+
 	def __init__(self, x, y, w, h, st = None):
 		gui.Window.__init__(self, x, y, w, h)
 		self.style = style.bind(self, st)

@@ -15,6 +15,7 @@ class Style(object):
 	def __init__(self, *args, **kwargs):
 		self._attrs = dict(*args, **kwargs)
 		self._owner = None
+		self._required = set()
 
 	def bind_owner(self, owner):
 		"""
@@ -22,6 +23,13 @@ class Style(object):
 		We use owner owner class and parent link to lookup attribute defaults.
 		"""
 		self._owner = owner
+
+	def require(self, attrs):
+		"""
+		Set attribute names that must be resolved in global registry to non None values
+		unless specified explicitly in constructor.
+		"""
+		self._required.update(attrs)
 
 	def __str__(self):
 		return str(self._attrs)
@@ -43,6 +51,8 @@ class Style(object):
 			pass
 		# lookup default values in global registry
 		v = Style._lookup_default(self._owner, self._attrs.get('name', None), self._attrs.get('tag', None), key)
+		if v is None and key in self._required:
+			raise RuntimeError('can`t find required style attribute %s for %s' % (key, self._owner))
 		# store lookup result to speed up subsequent lookups of the same key
 		self._attrs[key] = v
 		return v
@@ -87,4 +97,8 @@ def bind(obj, seed = None):
 	if seed is None:
 		seed = Style()
 	seed.bind_owner(obj)
+	try:
+		seed.require(obj._required_attrs)
+	except:
+		pass
 	return seed
