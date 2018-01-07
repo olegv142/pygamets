@@ -35,7 +35,7 @@ or (on linux):
 
 ## Environment
 Tested on raspberry pi zero W with jessie lite installed equipped with 4inch 320×480
-[LCD screen](https://www.waveshare.com/product/mini-pc/raspberry-pi/displays/4inch-rpi-lcd-a.htm)
+[LCD screen](https://www.waveshare.com/product/mini-pc/raspberry-pi/displays/4inch-rpi-lcd-a.htm).
 Also works on windows without any modifications.
 
 ## Author
