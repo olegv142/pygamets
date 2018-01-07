@@ -82,6 +82,7 @@ class PulseTextButton(StyledButton):
 		self.timer = app.Timer(self.on_timer, self.style.interval, True)
 		app.instance.add_timer(self.timer)
 		self.phase = 0
+		self.labels = [None]*self.style.period
 
 	def fini(self):
 		StyledButton.fini(self)
@@ -89,7 +90,7 @@ class PulseTextButton(StyledButton):
 
 	def on_timer(self):
 		self.phase += 1
-		if self.phase >= self.style.period:
+		if self.phase >= len(self.labels):
 			self.phase = 0
 		self.update()
 
@@ -97,12 +98,15 @@ class PulseTextButton(StyledButton):
 		if self.is_pressed:
 			label = self.p_label
 		else:
-			f = float(self.phase) / self.style.decay
-			p = int(255/(1+f*f))
-			l0, l1 = self.label0.copy(), self.label1.copy()
-			l1.fill((p, p, p), None, pg.BLEND_RGB_MULT)
-			l0.fill((255-p, 255-p, 255-p), None, pg.BLEND_RGB_MULT)
-			l1.blit(l0, (0, 0), None, pg.BLEND_RGB_ADD)
-			label = l1
+			label = self.labels[self.phase]
+			if label is None:
+				f = float(self.phase) / self.style.decay
+				p = int(255/(1+f*f))
+				l0, l1 = self.label0.copy(), self.label1.copy()
+				l1.fill((p, p, p), None, pg.BLEND_RGB_MULT)
+				l0.fill((255-p, 255-p, 255-p), None, pg.BLEND_RGB_MULT)
+				l1.blit(l0, (0, 0), None, pg.BLEND_RGB_ADD)
+				self.labels[self.phase] = l1
+				label = l1
 
 		utils.blit_centered(self.surface, label, self.frame())
