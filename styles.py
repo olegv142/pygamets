@@ -111,6 +111,6 @@ default = {
 			1 : (255, 255, 0), # warning
 			2 : (255, 0, 0),   # error
 		},
-		'quit_on_close' : True,
+		'halt_on_close' : True,
 	}
 }
