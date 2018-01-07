@@ -79,7 +79,9 @@ default = {
 		't_color'      : (255, 255, 255)
 	},
 	'Demo' : {
-		'max_fps' : 50,
+		'screen_w'      : 480,
+		'screen_h'      : 320,
+		'max_fps'       : 50,
 		'status_panel_h': 50,
 		'info_panel_h'  : 40,
 		'start_margin'  : 40,

@@ -9,9 +9,6 @@ import app, gui, button, label, battery, progress, window, style
 import pygame, time, threading, functools
 from style import Style
 
-# Screen size
-W, H = 480, 320
-
 # Status values
 sta_none         = 0
 sta_initializing = 1
@@ -58,6 +55,7 @@ class Demo(object):
 		"""
 		Show main screen with 2 information panels, battery indicator and start button
 		"""
+		W, H = self.style.screen_w, self.style.screen_h
 		self.screen.init_mode((W, H))
 		self.s_background = window.BckgWindow()
 		status_panel_h = self.style.status_panel_h
@@ -80,7 +78,7 @@ class Demo(object):
 
 	def show_activity_screen(self):
 		"""Show activity screen with progress indicator"""
-		margin = self.style.active_margin
+		W, H, margin = self.style.screen_w, self.style.screen_h, self.style.active_margin
 		width, height = W - 2*margin, H - self.style.status_panel_h - self.style.info_panel_h
 		self.s_action = window.FrameWindow(margin, self.style.status_panel_h, width, height, Style(tag='activity'))
 		btn = button.XButton(self.style.close_btn_sz)
@@ -102,7 +100,7 @@ class Demo(object):
 
 	def show_result_screen(self):
 		"""Show results screen"""
-		margin = self.style.result_margin
+		W, H, margin = self.style.screen_w, self.style.screen_h, self.style.result_margin
 		width, height = W - 2*margin, H - self.style.status_panel_h - self.style.info_panel_h
 		s = window.FrameWindow(margin, self.style.status_panel_h, width, height, Style(tag='result'))
 		btn = button.XButton(self.style.close_btn_sz)
