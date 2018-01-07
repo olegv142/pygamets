@@ -28,10 +28,7 @@ parameters storage from the code using them which leads to cleaner code and simp
 The textual elements rely on the global text translation table for the sake of GUI localization.
 
 The demo application is provided as working example of building simple GUI in multi-threaded application.
-To launch demo execute:
-    python demo.py
-or (on linux):
-    ./demo.py
+To launch demo execute `python demo.py` or (on linux) `./demo.py`.
 
 ## Environment
 Tested on raspberry pi zero W with jessie lite installed equipped with 4inch 320×480
