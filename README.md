@@ -23,12 +23,20 @@ We provided GUI base classes to serve as generic building blocks for application
 GUI elements such as buttons, labels, progress and battery charge indicators.
 
 The styles framework serves as a convenient way of setting various parameters in CSS-like manner. It separates
-parameters storage from the code that using them which leads to cleaner code and simplify visual appearance tuning.
+parameters storage from the code using them which leads to cleaner code and simplify visual appearance tuning.
 
 The textual elements rely on the global text translation table for the sake of GUI localization.
 
 The demo application is provided as working example of building simple GUI in multi-threaded application.
+To launch demo execute:
+    python demo.py
+or (on linux):
+    ./demo.py
 
+## Environment
+Tested on raspberry pi zero W with jessie lite installed equipped with 4inch 320×480
+[LCD screen](https://www.waveshare.com/product/mini-pc/raspberry-pi/displays/4inch-rpi-lcd-a.htm)
+Also works on windows without any modifications.
 
 ## Author
 
