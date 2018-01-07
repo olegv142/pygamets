@@ -1,6 +1,6 @@
 # pygame-ts
 
-GUI micro-framework with touch screen support for pygame frame-buffer applications.
+GUI micro-framework with touch screen support for [Pygame](http://www.pygame.org) frame-buffer applications.
 Designed for building simple GUI in embedded applications with focus on multi-threading.
 
 ## What it does
@@ -24,3 +24,9 @@ The styles framework serves as a convenient way of setting various parameters in
 parameters storage from the code that using them which leads to cleaner code and simplify visual appearance tuning.
 
 The demo application is provided as working example of building simple GUI in multi-threaded application.
+
+![](https://github.com/olegv142/pygame-ts/demo.png)
+
+## Author
+
+Oleg Volkov (olegv142@gmail.com)
