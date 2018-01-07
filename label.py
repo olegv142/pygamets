@@ -8,6 +8,8 @@ from localize import localize
 
 class TextLabel(gui.View):
 	"""The plain text label"""
+	_required_attrs = ('font_face', 'font_size')
+
 	def __init__(self, w, h, st = None):
 		gui.View.__init__(self, w, h)
 		self.style = style.bind(self, st)

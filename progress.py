@@ -10,6 +10,8 @@ class PieProgressIndicator(gui.View):
 	"""
 	Pie-chart like progress indicator widget
 	"""
+	_required_attrs = ('interval', 'period', 'f_color', 'done_color', 'todo_color')
+
 	def __init__(self, w, st = None):
 		gui.View.__init__(self, w, w)
 		self.style = style.bind(self, st)

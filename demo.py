@@ -30,6 +30,15 @@ inf_warning = 1
 inf_error   = 2
 
 class Demo(object):
+	"""Demo application with separate thread"""
+	_required_attrs = (
+		'screen_w', 'screen_h', 'max_fps',
+		'status_panel_h', 'info_panel_h', 'close_btn_sz',
+		'start_margin', 'active_margin', 'result_margin',
+		'progress_sz', 'ini_progress', 'fin_progress',
+		'batt_width', 'batt_margin', 'batt_charge',
+		'status_colors', 'info_colors'
+	)
 
 	def __init__(self):
 		# Using s_ prefix for screen elements
@@ -43,13 +52,13 @@ class Demo(object):
 		self.s_progress   = None # Progress indicator
 		self.s_remaining  = None # Remaining time
 		self.s_result     = None # Result screen
-		self.style        = style.bind(self)
 		self.worker       = threading.Thread(target = self.x_worker)
 		self.worker.daemon= True
 		self.start_time   = None
 		self.start_evt    = threading.Event()
 		self.stop_evt     = threading.Event()
 		self.status       = sta_none
+		self.style        = style.bind(self)
 
 	def show_main_screen(self):
 		"""

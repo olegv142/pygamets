@@ -17,6 +17,8 @@ class StyledButton(gui.Button):
 
 class RectButton(StyledButton):
 	"""Rectangular button with optional border"""
+	_required_attrs = ('f_color', 'p_color')
+
 	def __init__(self, w, h, st = None):
 		StyledButton.__init__(self, w, h, st)
 
@@ -39,6 +41,8 @@ class RectButton(StyledButton):
 
 class TextButton(StyledButton):
 	"""The Button with only text label drawn"""
+	_required_attrs = ('name', 'font_face', 'font_size', 't_color', 'tp_color')
+
 	def __init__(self, w, h, st = None):
 		StyledButton.__init__(self, w, h, st)
 
@@ -56,6 +60,8 @@ class TextButton(StyledButton):
 
 class XButton(StyledButton):
 	"""The X-mark button"""
+	_required_attrs = ('x_color', 'xp_color', 'x_width', 'x_margin')
+
 	def __init__(self, w, st = None):
 		StyledButton.__init__(self, w, w, st)
 
@@ -67,6 +73,8 @@ class XButton(StyledButton):
 
 class PulseTextButton(StyledButton):
 	"""The fancy pulsing text button"""
+	_required_attrs = ('name', 'font_face', 'font_size', 't0_color', 't1_color', 'tp_color', 'interval', 'period', 'decay')
+
 	def __init__(self, w, h, st = None):
 		StyledButton.__init__(self, w, h, st)
 

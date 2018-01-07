@@ -9,6 +9,8 @@ class BatteryIndicator(gui.View):
 	"""
 	Battery indicator widget
 	"""
+	_required_attrs = ('roundness', 'tip_height', 'tip_diameter', 'charge_color', 'alert_charge', 'alert_color')
+
 	def __init__(self, w, h, st = None):
 		gui.View.__init__(self, w, h)
 		self.style = style.bind(self, st)
