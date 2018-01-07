@@ -16,7 +16,7 @@ def draw_sector(surface, color, center, radius, from_angle, to_angle):
 	"""Draw filled sector as filled polygon"""
 	x, y = center
 	angle = to_angle - from_angle
-	segments = 1 + int(angle * radius)
+	segments = 1 + int(angle * radius / 4)
 	angles = [from_angle + (i*angle)/segments for i in range(segments+1)]
 	pointlist = [(x + int(radius*math.sin(a)), y - int(radius*math.cos(a))) for a in angles]
 	pointlist.append(center)

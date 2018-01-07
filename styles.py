@@ -36,8 +36,8 @@ default = {
 		'f_color'     : (0, 0, 255), 
 		'done_color'  : (0, 255, 0),
 		'todo_color'  : (100, 100, 100),
-		'interval'    : 50,
-		'period'      : 100,
+		'interval'    : 100,
+		'period'      : 70,
 	},
 	'TextLabel#remaining' : {
 		'font_size' : 64,
