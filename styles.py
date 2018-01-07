@@ -62,9 +62,9 @@ default = {
 		't1_color'  : (255, 255, 255),
 		't0_color'  : (0, 0, 255),
 		'tp_color'  : (100, 0, 100),  # text color in pressed state
-		'interval'  : 50,
-		'period'    : 100,
-		'decay'     : 30,
+		'interval'  : 100, # refresh interval in msec
+		'period'    : 50,
+		'decay'     : 15,
 	},
 	'XButton' : {
 		'x_color'  : (0, 255, 0),  # X mark color
@@ -86,7 +86,7 @@ default = {
 	'Demo' : {
 		'screen_w'      : 480,
 		'screen_h'      : 320,
-		'max_fps'       : 50,
+		'max_fps'       : 40,
 		'status_panel_h': 50,
 		'info_panel_h'  : 40,
 		'start_margin'  : 40,
@@ -111,5 +111,6 @@ default = {
 			1 : (255, 255, 0), # warning
 			2 : (255, 0, 0),   # error
 		},
+		'quit_on_close' : True,
 	}
 }

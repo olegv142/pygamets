@@ -61,7 +61,7 @@ class Demo(object):
 		status_panel_h = self.style.status_panel_h
 		info_panel_h = self.style.info_panel_h
 		btn = button.XButton(status_panel_h)
-		btn.clicked.connect(gui.quit)
+		btn.clicked.connect(self.quit)
 		self.s_background.add_child(btn, 0, 0)
 		self.s_battery = battery.BatteryIndicator(self.style.batt_width, status_panel_h - 2 * self.style.batt_margin)
 		self.s_battery.set_charge(self.style.batt_charge)
@@ -237,6 +237,12 @@ class Demo(object):
 			else:
 				self.x_show_info('measuring cancelled', inf_normal)
 
+	def quit(self):
+		"""Main window close handler"""
+		gui.quit()
+		if self.style.quit_on_close:
+			os.system('halt')
+
 	def run(self):
 		"""Run GUI and separate worker thread"""
 		app.init()
@@ -247,7 +253,5 @@ class Demo(object):
 		self.screen.run_event_loop(self.style.max_fps)		
 		app.fini()
 
-
 if __name__ == '__main__':
 	Demo().run()
-	os.system('halt')
