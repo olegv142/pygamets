@@ -6,7 +6,7 @@ Generic measuring device GUI example
 
 import env
 import app, gui, button, label, battery, progress, window, style
-import pygame, sys, time, threading, functools
+import pygame, sys, os, time, threading, functools
 from style import Style
 
 # Status values
@@ -247,5 +247,7 @@ class Demo(object):
 		self.screen.run_event_loop(self.style.max_fps)		
 		app.fini()
 
+
 if __name__ == '__main__':
 	Demo().run()
+	os.system('halt')
