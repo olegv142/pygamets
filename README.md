@@ -31,7 +31,7 @@ The demo application is provided as working example of building simple GUI in mu
 To launch demo execute `python demo.py` or (on linux) `./demo.py`.
 
 ## Environment
-Tested on raspberry pi zero W with jessie lite installed equipped with 4inch 320×480
+Tested on Raspberry Pi zero W with Stretch lite installed equipped with 4inch 320×480
 [LCD screen](https://www.waveshare.com/product/mini-pc/raspberry-pi/displays/4inch-rpi-lcd-a.htm).
 Also works on windows without any modifications.
 
