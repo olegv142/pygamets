@@ -25,7 +25,7 @@ parameters storage from the code that using them which leads to cleaner code and
 
 The demo application is provided as working example of building simple GUI in multi-threaded application.
 
-![](https://github.com/olegv142/pygame-ts/demo.png)
+![](https://github.com/olegv142/pygame-ts/blob/master/demo.png)
 
 ## Author
 
