@@ -183,6 +183,8 @@ class Demo(object):
 		It uses special asynchronous mechanisms - events and jobs for
 		communicating with GUI event loop.
 		"""
+		x_style = style.bind(self)
+
 		self.x_set_status(sta_initializing)
 		self.x_show_info('connecting to device', inf_normal)
 		self.x_initialize()
@@ -196,7 +198,7 @@ class Demo(object):
 			self.x_show_info('measurement starting', inf_normal)
 			self.x_show_activity_screen()
 
-			ini_progress, fin_progress = self.style.ini_progress, self.style.fin_progress
+			ini_progress, fin_progress = x_style.ini_progress, x_style.fin_progress
 			progress = ini_progress
 			self.x_show_progress(progress, True)
 
