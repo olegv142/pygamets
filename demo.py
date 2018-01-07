@@ -79,16 +79,21 @@ class Demo(object):
 	def show_activity_screen(self):
 		"""Show activity screen with progress indicator"""
 		W, H, margin = self.style.screen_w, self.style.screen_h, self.style.active_margin
-		width, height = W - 2*margin, H - self.style.status_panel_h - self.style.info_panel_h
-		self.s_action = window.FrameWindow(margin, self.style.status_panel_h, width, height, Style(tag='activity'))
+		self.s_action = window.FrameWindow(
+				margin, self.style.status_panel_h,
+				W - 2 * margin, H - self.style.status_panel_h - self.style.info_panel_h,
+				Style(tag='activity')
+			)
+		w, h = self.s_action.int_size()
 		btn = button.XButton(self.style.close_btn_sz)
 		btn.clicked.connect(self.cancel_activity)
-		self.s_action.add_child(btn, width - self.style.close_btn_sz, 0)
-		progress_sz = int(height * self.style.progress_sz)
+		self.s_action.add_child(btn, w - self.style.close_btn_sz, 0)
+		progress_sz = int(h * self.style.progress_sz)
+		progress_margin = (h - progress_sz) / 2
 		self.s_progress = progress.PieProgressIndicator(progress_sz)
-		self.s_action.add_child(self.s_progress, (height - progress_sz) / 2, (height - progress_sz) / 2)
-		self.s_remaining = label.TextLabel(width - (height + progress_sz) / 2, progress_sz, Style(tag='remaining'))
-		self.s_action.add_child(self.s_remaining, (height + progress_sz) / 2, (height - progress_sz) / 2)
+		self.s_action.add_child(self.s_progress, progress_margin, progress_margin)
+		self.s_remaining = label.TextLabel(w - progress_margin - progress_sz - self.style.close_btn_sz, h, Style(tag='remaining'))
+		self.s_action.add_child(self.s_remaining, progress_margin + progress_sz, 0)
 		self.screen.show(self.s_action)
 
 	def x_show_activity_screen(self):
@@ -119,15 +124,18 @@ class Demo(object):
 	def show_result_screen(self):
 		"""Show results screen"""
 		W, H, margin = self.style.screen_w, self.style.screen_h, self.style.result_margin
-		width, height = W - 2*margin, H - self.style.status_panel_h - self.style.info_panel_h
-		s = window.FrameWindow(margin, self.style.status_panel_h, width, height, Style(tag='result'))
+		s = window.FrameWindow(
+				margin, self.style.status_panel_h,
+				W - 2 * margin, H - self.style.status_panel_h - self.style.info_panel_h,
+				Style(tag='result')
+			)
+		w, h = self.s_action.int_size()
 		btn = button.XButton(self.style.close_btn_sz)
 		btn.clicked.connect(s.discard)
-		s.add_child(btn, width - self.style.close_btn_sz, 0)
-		padding = s.style.border + 1
-		txt = label.TextLabel(width - 2*padding, height - 2*padding, Style(tag='result', f_color=None))
+		s.add_child(btn, w - self.style.close_btn_sz, 0)
+		txt = label.TextLabel(w, h, Style(tag='result', f_color=None))
 		txt.set_text('Life is good')
-		s.add_child(txt, padding, padding)
+		s.add_child(txt, 0, 0)
 		self.screen.show(s)
 
 	def x_show_result_screen(self):

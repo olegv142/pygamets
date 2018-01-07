@@ -45,17 +45,29 @@ class View(object):
 		"""Returns the occupied rectangle coordinates in screen coordinate system"""
 		return self.screen_x, self.screen_y, self.w, self.h
 
+	def int_frame(self):
+		"""Returns internal area available for child elements placement"""
+		return 0, 0, self.w, self.h
+
+	def int_size(self):
+		"""Returns the size of internal area available for child elements placement"""
+		_, _, w, h = self.int_frame()
+		return w, h
+
 	def rect_to_screen(self, (x, y, w, h)):
 		"""Translates rectangle coordinates to the screen coordinate system"""
 		return self.screen_x + x, self.screen_y + y, w, h
 
 	def add_child(self, v, x, y):
-		"""Add child view"""
+		"""Add child view. Note that x, y are relative to the the internal frame."""
 		assert v.parent is None
-		v.x, v.y = x, y
+		ix, iy, iw, ih = self.int_frame()
+		v.x, v.y = ix + x, iy + y
+		assert iw is None or x + v.w <= iw
+		assert ih is None or y + v.h <= ih
 		v.parent = self
 		self.children.append(v)
-		
+
 	def apply_recursively(self, cb):
 		"""Call callback with the view as arguments and do it with all children recursively"""
 		cb(self)
@@ -364,6 +376,10 @@ class Button(View):
 		self.clicked = Signal()
 		self.pressed = Signal()
 		self.focus_changed = Signal()
+
+	def int_frame(self):
+		"""No child elements expected"""
+		return None
 
 	def on_pressed(self, pressed):
 		"""Mouse pressed handler"""

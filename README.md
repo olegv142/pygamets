@@ -25,6 +25,8 @@ GUI elements such as buttons, labels, progress and battery charge indicators.
 The styles framework serves as a convenient way of setting various parameters in CSS-like manner. It separates
 parameters storage from the code that using them which leads to cleaner code and simplify visual appearance tuning.
 
+The textual elements rely on the global text translation table for the sake of GUI localization.
+
 The demo application is provided as working example of building simple GUI in multi-threaded application.
 
 
