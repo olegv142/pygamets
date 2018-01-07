@@ -240,7 +240,7 @@ class Demo(object):
 	def quit(self):
 		"""Main window close handler"""
 		gui.quit()
-		if self.style.halt_on_close:
+		if sys.platform != 'win32' and self.style.halt_on_close:
 			os.system('halt')
 
 	def run(self):
