@@ -122,7 +122,7 @@ class View(object):
 		s.set_updated(rects)
 
 	def updated(self, rect = None):
-		"""Notify the area is updated"""
+		"""Called if the area is updated. Redraw children overlapping that area."""
 		updated_children = self.redraw_children(rect)
 		if rect is None:
 			self.set_updated()
