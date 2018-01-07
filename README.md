@@ -6,8 +6,8 @@ GUI micro-framework with touch screen support for [Pygame](http://www.pygame.org
 Designed for building simple GUI in embedded applications with focus on multi-threading.
 
 ## What it does
-The touch screen events seen in /dev/mouse has incorrect position information so the touch screen support in pygame
-seems to be broken unless running under x-windows. We have implemented separate input events handler reading them from /dev/input
+The touch screen events seen in /dev/input/mouse has incorrect position information so the touch screen support in pygame
+seems to be broken unless running under x-windows. We have implemented separate input events handler reading them from /dev/input/event
 raw events pipe. It is installed in place of pygame.event.get routine so any pygame application reading events from there will be
 able to work with touch screen flawlessly.
 
