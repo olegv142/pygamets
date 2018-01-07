@@ -6,7 +6,7 @@ Generic measuring device GUI example
 
 import env
 import app, gui, button, label, battery, progress, window, style
-import pygame, time, threading, functools
+import pygame, sys, time, threading, functools
 from style import Style
 
 # Status values
@@ -202,7 +202,8 @@ class Demo(object):
 	def run(self):
 		"""Run GUI and separate worker thread"""
 		app.init()
-		pygame.mouse.set_visible(False)
+		if sys.platform != 'win32':
+			pygame.mouse.set_visible(False)
 		self.show_main_screen()
 		self.worker.start()
 		self.screen.run_event_loop(self.style.max_fps)		
