@@ -17,112 +17,11 @@ See style.py for lookup algorithm details.
 import progress
 
 default = {
+	# example configuration applied to all style instances
 	'*' : {
 		'border'    : 1,
-		'f_color'   : (0, 0, 150),   # fill color
+		'f_color'   : (0, 0, 150), # fill colour
 		'font_face' : 'Arial',
 		'font_size' : 72
 	},
-	'TextLabel' : {
-		't_color'  : (0, 255, 0), # text color
-	},
-	'FrameWindow#result' : {
-		'f_color'   : (0, 0, 255),   # fill color
-		'b_color'   : (50, 0, 255),  # border color
-	},
-	'FrameWindow#activity' : {
-		'f_color'   : (0, 0, 255),   # fill color
-		'b_color'   : (50, 0, 255),  # border color
-	},
-	'PieProgressIndicator' : {
-		'f_color'     : (0, 0, 255), 
-		'done_color'  : (0, 255, 0),
-		'todo_color'  : (100, 100, 100),
-		'interval'    : 100,
-		'period'      : 70,
-	},
-	'BallClockProgressIndicator' : {
-		'interval'    : 50,
-		'step'        : 2,
-		'ball_sz'     : .17,
-		'ball_cnt'    : 12,
-		'done_color'  : (0, 255, 0),
-		'todo_color'  : (100, 100, 100),
-	},
-	'TextLabel#remaining' : {
-		'font_size' : 64,
-		't_color'   : (0, 255, 255), # text color
-		'f_color'   : (0, 0, 255),   # fill color
-	},
-	'TextLabel#result' : {
-		't_color'   : (0, 255, 0), # text color
-		'f_color'   : (0, 0, 255), # fill color
-	},
-	'TextLabel#status' : {
-		'font_size' : 32
-	},
-	'TextLabel#info' : {
-		'font_size' : 24
-	},
-	'TextButton' : {
-		't_color'  : (0, 255, 0),  # text color
-		'tp_color' : (0, 100, 0),  # text color in pressed state
-	},
-	'PulseTextButton' : {
-		't1_color'  : (255, 255, 255),
-		't0_color'  : (0, 0, 255),
-		'tp_color'  : (100, 0, 100),  # text color in pressed state
-		'interval'  : 100, # refresh interval in msec
-		'period'    : 50,
-		'decay'     : 15,
-	},
-	'XButton' : {
-		'x_color'  : (0, 255, 0),  # X mark color
-		'xp_color' : (0, 100, 0),  # X mark color in pressed state
-		'x_width'  : 4,            # X mark line width
-		'x_margin' : .3            # X mark margin relative to the button width
-	},
-	'BatteryIndicator' : {
-		'roundness'    : .15,
-		'tip_height'   : .07,
-		'tip_diameter' : .5,
-		'alert_charge' : .1,
-		'charge_color' : (0, 255, 0),
-		'alert_color'  : (255, 0, 0),
-		'batt_color'   : (100, 100, 100),
-		'font_size'    : 24,
-		't_color'      : (255, 255, 255)
-	},
-	'Demo' : {
-		'screen_w'      : 480,
-		'screen_h'      : 320,
-		'max_fps'       : 40,
-		'status_panel_h': 50,
-		'info_panel_h'  : 40,
-		'start_margin'  : 40,
-		'active_margin' : 25,
-		'result_margin' : 25,
-		'progress_sz'   : .8,
-		'ini_progress'  : .1,
-		'fin_progress'  : .07,
-		'batt_width'    : 80,
-		'batt_margin'   : 10,
-		'batt_charge'   : .8,
-		'close_btn_sz'  : 50,
-		'status_colors' : {
-			0 : (0, 0, 0), 
-			1 : (0, 255, 255), # initializing
-			2 : (0, 255, 0),   # ready
-			3 : (255, 255, 0), # busy
-			8 : (255, 0, 0),   # failed
-		},
-		'info_colors' : {
-			0 : (0, 255, 0),   # normal
-			1 : (255, 255, 0), # warning
-			2 : (255, 0, 0),   # error
-		},
-		'progress_indicator' : progress.BallClockProgressIndicator,
-		#'progress_indicator' : progress.PieProgressIndicator,
-		'halt_on_close' : True,
-	}
 }

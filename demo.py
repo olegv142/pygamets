@@ -5,9 +5,14 @@ Generic measuring device GUI example
 """
 
 import env
-import app, gui, button, label, battery, progress, window, style
+import app, gui, button, label, battery, progress, window, style, localize
 import pygame, sys, os, time, threading, functools
 from style import Style
+
+sys.path.append('config')
+import demo_styles, demo_localization
+style.styles = demo_styles
+localize.localization = demo_localization
 
 # Status values
 sta_none         = 0
