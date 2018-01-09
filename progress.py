@@ -17,6 +17,7 @@ class PieProgressIndicator(gui.View):
 		self.style = style.bind(self, st)
 		self.progress = 0.
 		self.rotating = False
+		self.changed = False
 		self.phase = 0
 
 	def set_progress(self, val, rotating = False):
@@ -28,7 +29,7 @@ class PieProgressIndicator(gui.View):
 		"""
 		self.progress = val
 		self.rotating = rotating
-		self.update()
+		self.changed = True
 
 	def init(self, surface):
 		gui.View.init(self, surface)
@@ -42,9 +43,12 @@ class PieProgressIndicator(gui.View):
 	def on_timer(self):
 		if self.rotating:
 			self.phase += 1
-		if self.phase >= self.style.period:
-			self.phase = 0
-		self.update()
+			if self.phase >= self.style.period:
+				self.phase = 0
+			self.changed = True
+		if self.changed:
+			self.update()
+			self.changed = False
 
 	def draw(self):
 		x, y, w, h = self.frame()
