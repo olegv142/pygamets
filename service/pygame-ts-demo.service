@@ -1,7 +1,7 @@
 [Service]
 Type=idle
 WorkingDirectory=/home/pi/src/pygame-ts/
-ExecStart=/usr/bin/daemon /usr/bin/python /home/pi/src/pygame-ts/demo.py
+ExecStart=/usr/bin/daemon -D /home/pi/src/pygame-ts/ /usr/bin/python /home/pi/src/pygame-ts/demo.py
 Restart=always
 StandardOutput=syslog
 StandardError=syslog
