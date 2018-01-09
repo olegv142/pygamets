@@ -30,12 +30,3 @@ def merge_rgb(col0, col1, k):
 	g = max(0, min(255, int(g0*(1-k) + g1*k)))
 	b = max(0, min(255, int(b0*(1-k) + b1*k)))
 	return r, g, b
-
-def merge_surf(surf0, surf1, k):
-	"""Merge 2 surfaces of the same dimension producing the linear combination surf0 * (1 - k) + surf1 * k"""
-	k = max(0, min(255, int(255*k)))
-	s0, s1 = surf0.copy(), surf1.copy()
-	s1.fill((k, k, k), None, pg.BLEND_RGB_MULT)
-	s0.fill((255-k, 255-k, 255-k), None, pg.BLEND_RGB_MULT)
-	s0.blit(s1, (0, 0), None, pg.BLEND_RGB_ADD)
-	return s0

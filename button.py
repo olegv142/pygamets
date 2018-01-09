@@ -81,16 +81,12 @@ class PulseTextButton(StyledButton):
 	def init(self, surface):
 		StyledButton.init(self, surface)
 		name = localize(self.style.name)
-		assert name
-		assert self.style.decay > 0
-		font = pg.font.SysFont(self.style.font_face, self.style.font_size)
-		self.label0  = font.render(name, True, self.style.t0_color)
-		self.label1  = font.render(name, True, self.style.t1_color)
-		self.p_label = font.render(name, True, self.style.tp_color)
+		self.font = pg.font.SysFont(self.style.font_face, self.style.font_size)
+		self.p_label = self.font.render(name, True, self.style.tp_color)
 		self.timer = app.Timer(self.on_timer, self.style.interval, True)
 		app.instance.add_timer(self.timer)
-		self.phase = 0
 		self.labels = [None]*self.style.period
+		self.phase = 0
 
 	def fini(self):
 		StyledButton.fini(self)
@@ -109,6 +105,9 @@ class PulseTextButton(StyledButton):
 			label = self.labels[self.phase]
 			if label is None:
 				f = float(self.phase) / self.style.decay
-				label = self.labels[self.phase] = utils.merge_surf(self.label0, self.label1, 1/(1+f*f))
+				label = self.labels[self.phase] = self.font.render(
+					localize(self.style.name), True, 
+					utils.merge_rgb(self.style.t0_color, self.style.t1_color, 1/(1+f*f))
+				)
 
 		utils.blit_centered(self.surface, label, self.frame())
