@@ -39,6 +39,14 @@ default = {
 		'interval'    : 100,
 		'period'      : 70,
 	},
+	'BallClockProgressIndicator' : {
+		'interval'    : 50,
+		'step'        : 2,
+		'ball_sz'     : .17,
+		'ball_cnt'    : 12,
+		'done_color'  : (0, 255, 0),
+		'todo_color'  : (100, 100, 100),
+	},
 	'TextLabel#remaining' : {
 		'font_size' : 64,
 		't_color'   : (0, 255, 255), # text color
@@ -92,8 +100,8 @@ default = {
 		'start_margin'  : 40,
 		'active_margin' : 25,
 		'result_margin' : 25,
-		'progress_sz'   : .7,
-		'ini_progress'  : .07,
+		'progress_sz'   : .8,
+		'ini_progress'  : .1,
 		'fin_progress'  : .07,
 		'batt_width'    : 80,
 		'batt_margin'   : 10,
