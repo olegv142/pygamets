@@ -14,6 +14,8 @@ The top level dictionary keys may have the following formats:
 See style.py for lookup algorithm details.
 """
 
+import progress
+
 default = {
 	'*' : {
 		'border'    : 1,
@@ -119,6 +121,8 @@ default = {
 			1 : (255, 255, 0), # warning
 			2 : (255, 0, 0),   # error
 		},
+		'progress_indicator' : progress.BallClockProgressIndicator,
+		#'progress_indicator' : progress.PieProgressIndicator,
 		'halt_on_close' : True,
 	}
 }

@@ -37,7 +37,8 @@ class Demo(object):
 		'start_margin', 'active_margin', 'result_margin',
 		'progress_sz', 'ini_progress', 'fin_progress',
 		'batt_width', 'batt_margin', 'batt_charge',
-		'status_colors', 'info_colors'
+		'status_colors', 'info_colors',
+		'progress_indicator'
 	)
 
 	def __init__(self):
@@ -99,7 +100,7 @@ class Demo(object):
 		self.s_action.add_child(btn, w - self.style.close_btn_sz, 0)
 		progress_sz = int(h * self.style.progress_sz)
 		progress_margin = (h - progress_sz) / 2
-		self.s_progress = progress.BallClockProgressIndicator(progress_sz)
+		self.s_progress = self.style.progress_indicator(progress_sz)
 		self.s_action.add_child(self.s_progress, progress_margin, progress_margin)
 		self.s_remaining = label.TextLabel(w - progress_margin - progress_sz - self.style.close_btn_sz, h, Style(tag='remaining'))
 		self.s_action.add_child(self.s_remaining, progress_margin + progress_sz, 0)
