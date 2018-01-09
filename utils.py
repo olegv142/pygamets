@@ -21,3 +21,12 @@ def draw_sector(surface, color, center, radius, from_angle, to_angle):
 	pointlist = [(x + int(radius*math.sin(a)), y - int(radius*math.cos(a))) for a in angles]
 	pointlist.append(center)
 	pg.draw.polygon(surface, color, pointlist)
+
+def merge(surf0, surf1, k):
+	"""Merge 2 surfaces of the same dimension producing the linear combination surf0 * (1 - k) + surf1 * k"""
+	k = max(0, min(255, int(255*k)))
+	s0, s1 = surf0.copy(), surf1.copy()
+	s1.fill((k, k, k), None, pg.BLEND_RGB_MULT)
+	s0.fill((255-k, 255-k, 255-k), None, pg.BLEND_RGB_MULT)
+	s0.blit(s1, (0, 0), None, pg.BLEND_RGB_ADD)
+	return s0

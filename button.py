@@ -109,12 +109,6 @@ class PulseTextButton(StyledButton):
 			label = self.labels[self.phase]
 			if label is None:
 				f = float(self.phase) / self.style.decay
-				p = int(255/(1+f*f))
-				l0, l1 = self.label0.copy(), self.label1.copy()
-				l1.fill((p, p, p), None, pg.BLEND_RGB_MULT)
-				l0.fill((255-p, 255-p, 255-p), None, pg.BLEND_RGB_MULT)
-				l1.blit(l0, (0, 0), None, pg.BLEND_RGB_ADD)
-				self.labels[self.phase] = l1
-				label = l1
+				label = self.labels[self.phase] = utils.merge(self.label0, self.label1, 1/(1+f*f))
 
 		utils.blit_centered(self.surface, label, self.frame())
