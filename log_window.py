@@ -7,9 +7,8 @@ from window import FrameWindow
 import logging
 import pygame as pg
 
-
 class LogWindow(FrameWindow, logging.Handler):
-	"""Window filling entire screen"""
+	"""This window serves as log handler and shows the last log records"""
 	_required_attrs = (
 			'f_color', 'font_face', 'font_size',
 			'norm_color', 'warn_color', 'err_color',
