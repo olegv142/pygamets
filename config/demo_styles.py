@@ -41,11 +41,11 @@ default = {
 	},
 	'LogWindow' : {
 		'border'     : 0,
-		'font_size'  : 10,
+		'font_size'  : 12,
 		'left_margin': 8,
 		'top_margin' : 5,
 		'f_color'    : (0, 0, 0),
-		'font_face'  : 'consolas',
+		'font_face'  : 'freesans',
 		'norm_color' : (0, 255, 0),
 		'warn_color' : (255, 255, 0),
 		'err_color'  : (255, 0, 150),
@@ -82,7 +82,7 @@ default = {
 		'font_size' : 24
 	},
 	'TextButton[i]': {
-		'font_face' : 'lucidacalligraphy',
+		'font_face' : 'freesans',
 		'font_size' : 24,
 		't_color'   : (0, 255, 0),  # text color
 		'tp_color'  : (0, 100, 0),  # text color in pressed state
