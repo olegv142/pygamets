@@ -189,17 +189,47 @@ class View(object):
 		"""Mouse clicked callback to be implemented in subclasses"""
 		pass
 
-class Window(View):
+class Window(object):
 	"""The window is the top level view. Only top level window may receive input focus."""
-	def __init__(self, x, y, w, h):
-		View.__init__(self, w, h)
+	def __init__(self, x, y, v):
 		self.x, self.y = x, y
+		self.w, self.h = v.w, v.h
 		self.in_focus = None
 		self.screen = None
+		self.view = v
+		v.x, v.y = 0, 0
+		v.parent = self
 
 	def origin(self):
 		"""Returns the top-left corner coordinates in the screen coordinate system"""
 		return self.x, self.y
+
+	def frame(self):
+		"""Returns the occupied rectangle coordinates in screen coordinate system"""
+		return self.view.frame()
+
+	def int_frame(self):
+		"""Returns internal area available for child elements placement"""
+		return self.view.int_frame()
+
+	def int_size(self):
+		"""Returns the size of internal area available for child elements placement"""
+		return self.view.int_size()
+
+	def cover_rect(self, rect):
+		"""
+		Returns True if the view area has non-empty intersection with given rect.
+		The rect coordinates are assumed to be in the parent coordinate system.
+		"""
+		return self.view.cover_rect(rect)
+
+	def cover_screen_pos(self, pos):
+		"""Returns True if the view contains given point in the screen coordinate system"""
+		return self.view.cover_screen_pos(pos)
+
+	def add_child(self, v, x, y):
+		"""Add child view. The x, y coordinates are relative to the parent"""
+		self.view.add_child(v, x, y)
 
 	def clear_focus(self):
 		"""Clear input focus"""
@@ -212,10 +242,16 @@ class Window(View):
 		if self.screen:
 			self.screen.close(self)
 
+	def init(self, screen):
+		"""Attach window to the screen"""
+		self.screen = screen
+		self.view.apply_recursively(lambda v: v.init(screen.surface))
+
 	def fini(self):
 		"""Finalization routine called on removing window from the screen"""
 		self.clear_focus()
-		View.fini(self)
+		self.view.apply_recursively(lambda v: v.fini())
+		self.screen = None
 
 	def get_window(self):
 		"""Get window object (self)"""
@@ -226,19 +262,22 @@ class Window(View):
 		assert self.screen is not None
 		return self.screen
 
+	def redraw(self):
+		self.view.redraw()		
+
 	def deliver_mouse_event(self, e):
 		"""Mouse events handler"""
 		if e.type == pg.MOUSEBUTTONDOWN:
 			if self.in_focus is not None:
 				self.in_focus.set_focus(False)
-			self.in_focus = self.find_interactive(e.pos)
+			self.in_focus = self.view.find_interactive(e.pos)
 			if self.in_focus is not None:
 				self.in_focus.set_focus(True)
 				self.in_focus.on_mouse_event(e)
 		elif e.type == pg.MOUSEBUTTONUP:
 			if self.in_focus is not None:
 				in_focus = self.in_focus
-				lost_focus = self.find_interactive(e.pos) != in_focus
+				lost_focus = self.view.find_interactive(e.pos) != in_focus
 				if lost_focus:
 					in_focus.set_focus(False)
 					self.in_focus = None
@@ -279,16 +318,14 @@ class Screen(object):
 		assert self.surface is not None
 		if self.windows:
 			self.windows[-1].clear_focus()
-		wnd.screen = self
 		self.windows.append(wnd)
-		wnd.apply_recursively(lambda v: v.init(self.surface))
+		wnd.init(self)
 		wnd.redraw()
 		self.set_updated([wnd.frame()])
 
 	def close(self, wnd):
 		"""Remove given window from the screen"""
-		wnd.apply_recursively(lambda v: v.fini())
-		wnd.screen = None
+		wnd.fini()
 		self.windows.remove(wnd)
 		self.redraw()
 

@@ -5,17 +5,17 @@ Window classes
 import gui, style, utils
 import pygame as pg
 
-class FrameWindow(gui.Window):
+class Frame(gui.View):
 	"""Fixed size window with optional border"""
 	_required_attrs = ('f_color',)
 
-	def __init__(self, x, y, w, h, st = None):
-		gui.Window.__init__(self, x, y, w, h)
+	def __init__(self, w, h, st = None):
+		gui.View.__init__(self, w, h)
 		self.style = style.bind(self, st)
 
 	def int_frame(self):
 		"""Take into account border if present"""
-		iframe = gui.Window.int_frame(self)
+		iframe = gui.View.int_frame(self)
 		b = self.style.border
 		if b:
 			return utils.apply_margins(iframe, b + 1, b + 1)

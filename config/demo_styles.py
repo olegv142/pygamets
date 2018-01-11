@@ -28,18 +28,18 @@ default = {
 	'TextLabel' : {
 		't_color'  : (0, 255, 0), # text color
 	},
-	'FrameWindow#background' : {
+	'Frame#background' : {
 		'border'    : 0,
 	},
-	'FrameWindow#result' : {
+	'Frame#result' : {
 		'f_color'   : (0, 0, 255),   # fill color
 		'b_color'   : (50, 0, 255),  # border color
 	},
-	'FrameWindow#activity' : {
+	'Frame#activity' : {
 		'f_color'   : (0, 0, 255),   # fill color
 		'b_color'   : (50, 0, 255),  # border color
 	},
-	'LogWindow' : {
+	'LogView' : {
 		'border'     : 0,
 		'font_size'  : 12,
 		'left_margin': 8,

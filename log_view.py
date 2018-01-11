@@ -3,20 +3,20 @@ Log window
 """
 
 import button, utils, style
-from window import FrameWindow
+from frame import Frame
 import logging
 import pygame as pg
 
-class LogWindow(FrameWindow, logging.Handler):
+class LogView(Frame, logging.Handler):
 	"""This window serves as log handler and shows the last log records"""
 	_required_attrs = (
 			'font_face', 'font_size',
 			'norm_color', 'warn_color', 'err_color',
 			'x_btn_size', 'left_margin', 'top_margin'
-		) + FrameWindow._required_attrs
+		) + Frame._required_attrs
 
-	def __init__(self, x, y, w, h, st = None):
-		FrameWindow.__init__(self, x, y, w, h)
+	def __init__(self, w, h, st = None):
+		Frame.__init__(self, w, h)
 		logging.Handler.__init__(self)
 		self.style = style.bind(self, st)
 		btn = button.XButton(self.style.x_btn_size, self.style.copy())
@@ -26,6 +26,9 @@ class LogWindow(FrameWindow, logging.Handler):
 		_, ih = self.int_size()
 		self.n = (ih - self.style.top_margin) // self.font.get_height()
 		self.msgs = []
+
+	def close(self):
+		self.get_window().close()
 
 	def emit(self, record):
 		"""logging.Handler method"""
@@ -43,7 +46,7 @@ class LogWindow(FrameWindow, logging.Handler):
 			return self.style.err_color
 
 	def draw(self):
-		FrameWindow.draw(self)
+		Frame.draw(self)
 		ix, iy, iw, ih = self.rect_to_screen(self.int_frame())
 		ix += self.style.left_margin
 		iy += self.style.top_margin

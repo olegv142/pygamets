@@ -5,9 +5,10 @@ Generic measuring device GUI example
 """
 
 import env
-import app, gui, utils, button, label, battery, progress, window, style, localize
+import app, gui, utils, button, label, battery, progress, style, localize
 import pygame, sys, os, time, threading, functools
-from log_window import LogWindow
+from log_view import LogView
+from frame import Frame
 from style import Style
 
 import logging
@@ -80,7 +81,7 @@ class Demo(object):
 		info_panel_h   = self.style.info_panel_h
 
 		self.screen.init_mode((W, H))
-		self.s_background = window.FrameWindow(0, 0, W, H, Style(tag='background'))
+		self.s_background = gui.Window(0, 0, Frame(W, H, Style(tag='background')))
 		iW, iH = self.s_background.int_size()
 
 		close_btn = button.XButton(status_panel_h)
@@ -106,8 +107,9 @@ class Demo(object):
 		btn.clicked.connect(self.start_activity)
 		utils.add_left_bottom(self.s_background, btn, ymargin = start_margin, next_to = self.s_info)
 
-		self.s_log_window = LogWindow(0, 0, W, H)
-		logger.addHandler(self.s_log_window)
+		log_view = LogView(W, H)
+		self.s_log_window = gui.Window(0, 0, log_view)
+		logger.addHandler(log_view)
 		self.screen.show(self.s_background)
 
 		timer = app.Timer(self.idle_timer, 1000, True)
@@ -124,10 +126,12 @@ class Demo(object):
 	def show_activity_screen(self):
 		"""Show activity screen with progress indicator"""
 		W, H, margin = self.style.screen_w, self.style.screen_h, self.style.active_margin
-		self.s_action = window.FrameWindow(
+		self.s_action = gui.Window(
 				margin, self.style.status_panel_h,
-				W - 2 * margin, H - self.style.status_panel_h - self.style.info_panel_h,
-				Style(tag='activity')
+				Frame(
+					W - 2 * margin, H - self.style.status_panel_h - self.style.info_panel_h,
+					Style(tag='activity')
+				)
 			)
 		w, h = self.s_action.int_size()
 		btn = button.XButton(self.style.close_btn_sz)
@@ -170,10 +174,12 @@ class Demo(object):
 	def show_result_screen(self):
 		"""Show results screen"""
 		W, H, margin = self.style.screen_w, self.style.screen_h, self.style.result_margin
-		s = window.FrameWindow(
+		s = gui.Window(
 				margin, self.style.status_panel_h,
-				W - 2 * margin, H - self.style.status_panel_h - self.style.info_panel_h,
-				Style(tag='result')
+				Frame(
+					W - 2 * margin, H - self.style.status_panel_h - self.style.info_panel_h,
+					Style(tag='result')
+				)
 			)
 		w, h = self.s_action.int_size()
 		btn = button.XButton(self.style.close_btn_sz)
