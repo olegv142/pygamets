@@ -30,3 +30,37 @@ def merge_rgb(col0, col1, k):
 	g = max(0, min(255, int(g0*(1-k) + g1*k)))
 	b = max(0, min(255, int(b0*(1-k) + b1*k)))
 	return r, g, b
+
+def add_top_left(parent, v, xmargin = 0, ymargin = 0, next_to = None):
+	"""Child view placement helper"""
+	x, y, w, h = parent.int_frame()
+	if next_to is not None:
+		x = next_to.x + next_to.w
+	parent.add_child(v, x + xmargin, y + ymargin)
+
+def add_top_right(parent, v, xmargin = 0, ymargin = 0, next_to = None):
+	"""Child view placement helper"""
+	x, y, w, h = parent.int_frame()
+	if next_to is not None:
+		x = next_to.x
+	else:
+		x += w
+	x -= v.w + 2 * xmargin
+	parent.add_child(v, x + xmargin, y + ymargin)
+
+def add_left_top(parent, v, xmargin = 0, ymargin = 0, next_to = None):
+	"""Child view placement helper"""
+	x, y, w, h = parent.int_frame()
+	if next_to is not None:
+		y = next_to.y + next_to.h
+	parent.add_child(v, x + xmargin, y + ymargin)
+
+def add_left_bottom(parent, v, xmargin = 0, ymargin = 0, next_to = None):
+	"""Child view placement helper"""
+	x, y, w, h = parent.int_frame()
+	if next_to is not None:
+		y = next_to.y
+	else:
+		y += h
+	y -= v.h + 2 * ymargin
+	parent.add_child(v, x + xmargin, y + ymargin)
