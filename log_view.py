@@ -2,40 +2,22 @@
 Log window
 """
 
-import button, utils, style
-from frame import Frame
+import gui, button, utils, style
+from list_view import ListView
 import logging
 import pygame as pg
 
-class LogView(Frame, logging.Handler):
-	"""This window serves as log handler and shows the last log records"""
-	_required_attrs = (
-			'font_face', 'font_size',
-			'norm_color', 'warn_color', 'err_color',
-			'x_btn_size', 'left_margin', 'top_margin'
-		) + Frame._required_attrs
+class LogView(ListView, logging.Handler):
+	"""This view serves as log handler and shows the last log records"""
+	_required_attrs = ('norm_color', 'warn_color', 'err_color') + ListView._required_attrs
 
 	def __init__(self, w, h, st = None):
-		Frame.__init__(self, w, h)
+		ListView.__init__(self, w, h, st)
 		logging.Handler.__init__(self)
-		self.style = style.bind(self, st)
-		btn = button.XButton(self.style.x_btn_size, self.style.copy())
-		btn.clicked.connect(self.close)
-		utils.add_top_right(self, btn)
-		self.font = pg.font.SysFont(self.style.font_face, self.style.font_size)
-		_, ih = self.int_size()
-		self.n = (ih - self.style.top_margin) // self.font.get_height()
-		self.msgs = []
 
-	def close(self):
-		self.get_window().close()
-
-	def emit(self, record):
+	def emit(self, rec):
 		"""logging.Handler method"""
-		self.msgs.append([self.format(record), record.levelno, None])
-		if len(self.msgs) > self.n:
-			self.msgs = self.msgs[-self.n:]
-		self.update()
+		self.append(self.format(rec), self.msg_color(rec.levelno))
 
 	def msg_color(self, lvl):
 		if lvl <= logging.INFO:
@@ -45,14 +27,16 @@ class LogView(Frame, logging.Handler):
 		else:
 			return self.style.err_color
 
-	def draw(self):
-		Frame.draw(self)
-		ix, iy, iw, ih = self.rect_to_screen(self.int_frame())
-		ix += self.style.left_margin
-		iy += self.style.top_margin
-		fh = self.font.get_height()
-		for i, m in enumerate(self.msgs):
-			text, lvl, rendered = m
-			if not rendered:
-				m[2] = rendered = self.font.render(text, True, self.msg_color(lvl))
-			self.surface.blit(rendered, (ix, iy + i * fh))
+class LogWindow(gui.Window):
+	"""The window showing the last log records"""
+	_required_attrs = ('x_btn_size',)
+
+	def __init__(self, W, H, st = None):
+		self.style = style.bind(self, st)
+		gui.Window.__init__(self, 0, 0, LogView(W, H, self.style.copy()))
+		btn = button.XButton(self.style.x_btn_size, self.style.copy())
+		btn.clicked.connect(self.close)
+		utils.add_top_right(self, btn)
+
+	def handler(self):
+		return self.view

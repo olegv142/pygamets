@@ -39,6 +39,9 @@ default = {
 		'f_color'   : (0, 0, 255),   # fill color
 		'b_color'   : (50, 0, 255),  # border color
 	},
+	'LogWindow' : {
+		'x_btn_size' : status_panel_h,
+	},
 	'LogView' : {
 		'border'     : 0,
 		'font_size'  : 12,
@@ -49,7 +52,6 @@ default = {
 		'norm_color' : (0, 255, 0),
 		'warn_color' : (255, 255, 0),
 		'err_color'  : (255, 0, 150),
-		'x_btn_size' : status_panel_h,
 	},
 	'PieProgressIndicator' : {
 		'f_color'     : (0, 0, 255), 

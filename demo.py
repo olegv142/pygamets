@@ -7,7 +7,7 @@ Generic measuring device GUI example
 import env
 import app, gui, utils, button, label, battery, progress, style, localize
 import pygame, sys, os, time, threading, functools
-from log_view import LogView
+from log_view import LogWindow
 from frame import Frame
 from style import Style
 
@@ -107,9 +107,8 @@ class Demo(object):
 		btn.clicked.connect(self.start_activity)
 		utils.add_left_bottom(self.s_background, btn, ymargin = start_margin, next_to = self.s_info)
 
-		log_view = LogView(W, H)
-		self.s_log_window = gui.Window(0, 0, log_view)
-		logger.addHandler(log_view)
+		self.s_log_window = LogWindow(W, H)
+		logger.addHandler(self.s_log_window.handler())
 		self.screen.show(self.s_background)
 
 		timer = app.Timer(self.idle_timer, 1000, True)
