@@ -24,6 +24,12 @@ class Style(object):
 		"""
 		self._owner = owner
 
+	def copy(self):
+		"""Create clone of the style with owner detached"""
+		s = Style()
+		s._attrs = self._attrs.copy()
+		return s
+
 	def require(self, attrs):
 		"""
 		Set attribute names that must be resolved in global registry to non None values
