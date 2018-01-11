@@ -115,7 +115,7 @@ class Demo(object):
 
 	def show_log(self):
 		"""Show log window"""
-		logger.error('just test error message')
+		logger.error('just test error message, the long string will be truncated truncated truncated truncated truncated truncated truncated truncated')
 		self.screen.show(self.s_log_window)
 
 	def idle_timer(self):
