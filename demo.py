@@ -5,9 +5,14 @@ Generic measuring device GUI example
 """
 
 import env
-import app, gui, button, label, battery, progress, window, style, localize
+import app, gui, utils, button, label, battery, progress, window, style, localize
 import pygame, sys, os, time, threading, functools
+from log_window import LogWindow
 from style import Style
+
+import logging
+logger = logging.getLogger('demo')
+logger.setLevel(logging.DEBUG)
 
 sys.path.append('config')
 import demo_styles, demo_localization
@@ -71,25 +76,50 @@ class Demo(object):
 		Show main screen with 2 information panels, battery indicator and start button
 		"""
 		W, H = self.style.screen_w, self.style.screen_h
-		self.screen.init_mode((W, H))
-		self.s_background = window.BckgWindow()
 		status_panel_h = self.style.status_panel_h
-		info_panel_h = self.style.info_panel_h
-		btn = button.XButton(status_panel_h)
-		btn.clicked.connect(self.quit)
-		self.s_background.add_child(btn, 0, 0)
+		info_panel_h   = self.style.info_panel_h
+
+		self.screen.init_mode((W, H))
+		self.s_background = window.FrameWindow(0, 0, W, H, Style(tag='background'))
+		iW, iH = self.s_background.int_size()
+
+		close_btn = button.XButton(status_panel_h)
+		close_btn.clicked.connect(self.quit)
+		utils.add_top_left(self.s_background, close_btn)
+
+		log_btn = button.TextButton(status_panel_h, status_panel_h, Style(name='i'))
+		log_btn.clicked.connect(self.show_log)
+		utils.add_top_right(self.s_background, log_btn)
+
 		self.s_battery = battery.BatteryIndicator(self.style.batt_width, status_panel_h - 2 * self.style.batt_margin)
 		self.s_battery.set_charge(self.style.batt_charge)
-		self.s_background.add_child(self.s_battery, W - self.style.batt_width - self.style.batt_margin, self.style.batt_margin)
-		self.s_status = label.TextLabel(W - status_panel_h - self.style.batt_width - self.style.batt_margin, status_panel_h, Style(tag='status'))
-		self.s_background.add_child(self.s_status, status_panel_h, 0)
-		self.s_info = label.TextLabel(W, info_panel_h, Style(tag='info'))
-		self.s_background.add_child(self.s_info, 0, H - info_panel_h)
+		utils.add_top_right(self.s_background, self.s_battery, self.style.batt_margin, self.style.batt_margin, next_to = log_btn)
+
+		self.s_status = label.TextLabel(self.s_battery.left() - close_btn.right(), status_panel_h, Style(tag='status'))
+		utils.add_top_left(self.s_background, self.s_status, next_to = close_btn)
+
+		self.s_info = label.TextLabel(iW, info_panel_h, Style(tag='info'))
+		utils.add_left_bottom(self.s_background, self.s_info)
+
 		start_margin = self.style.start_margin
-		btn = button.PulseTextButton(W, H - status_panel_h - info_panel_h - 2*start_margin, Style(name='START'))
+		btn = button.PulseTextButton(iW, iH - status_panel_h - info_panel_h - 2*start_margin, Style(name='START'))
 		btn.clicked.connect(self.start_activity)
-		self.s_background.add_child(btn, 0, status_panel_h + start_margin)
+		utils.add_left_bottom(self.s_background, btn, ymargin = start_margin, next_to = self.s_info)
+
+		self.s_log_window = LogWindow(0, 0, W, H)
+		logger.addHandler(self.s_log_window)
 		self.screen.show(self.s_background)
+
+		timer = app.Timer(self.idle_timer, 1000, True)
+		app.instance.add_timer(timer)
+
+	def show_log(self):
+		"""Show log window"""
+		logger.error('just test error message')
+		self.screen.show(self.s_log_window)
+
+	def idle_timer(self):
+		logger.debug('idle_timer')
 
 	def show_activity_screen(self):
 		"""Show activity screen with progress indicator"""
@@ -102,13 +132,13 @@ class Demo(object):
 		w, h = self.s_action.int_size()
 		btn = button.XButton(self.style.close_btn_sz)
 		btn.clicked.connect(self.cancel_activity)
-		self.s_action.add_child(btn, w - self.style.close_btn_sz, 0)
+		utils.add_top_right(self.s_action, btn)
 		progress_sz = int(h * self.style.progress_sz)
 		progress_margin = (h - progress_sz) / 2
 		self.s_progress = self.style.progress_indicator(progress_sz)
-		self.s_action.add_child(self.s_progress, progress_margin, progress_margin)
+		utils.add_top_left(self.s_action, self.s_progress, xmargin = progress_margin, ymargin = progress_margin)
 		self.s_remaining = label.TextLabel(w - progress_margin - progress_sz - self.style.close_btn_sz, h, Style(tag='remaining'))
-		self.s_action.add_child(self.s_remaining, progress_margin + progress_sz, 0)
+		utils.add_top_left(self.s_action, self.s_remaining, next_to = self.s_progress)
 		self.screen.show(self.s_action)
 
 	def x_show_activity_screen(self):
@@ -117,6 +147,7 @@ class Demo(object):
 		
 	def show_progress(self, val, rotating, secs_left = None):
 		"""Show progress on activity screen"""
+		logger.debug('show_progress: %.2f, rotating=%s, secs_left=%s', val, rotating, secs_left)
 		self.s_progress.set_progress(val, rotating)
 		if secs_left is not None:
 			self.s_remaining.set_text(str(secs_left))
@@ -130,7 +161,7 @@ class Demo(object):
 	def close_activity_screen(self):
 		"""Close activity screen"""
 		self.s_progress = None
-		self.s_action.discard()
+		self.s_action.close()
 
 	def x_close_activity_screen(self):
 		"""Close activity screen from worker thread"""
@@ -146,11 +177,11 @@ class Demo(object):
 			)
 		w, h = self.s_action.int_size()
 		btn = button.XButton(self.style.close_btn_sz)
-		btn.clicked.connect(s.discard)
-		s.add_child(btn, w - self.style.close_btn_sz, 0)
+		btn.clicked.connect(s.close)
+		utils.add_top_right(s, btn)
 		txt = label.TextLabel(w, h, Style(tag='result', f_color=None))
 		txt.set_text('Life is good')
-		s.add_child(txt, 0, 0)
+		utils.add_top_left(s, txt)
 		self.screen.show(s)
 
 	def x_show_result_screen(self):
@@ -159,14 +190,17 @@ class Demo(object):
 
 	def start_activity(self):
 		"""Start button handler"""
+		logger.info('starting')
 		self.start_evt.set()
 
 	def cancel_activity(self):
 		"""Activity screen close button handler"""
+		logger.warning('cancelling')
 		self.stop_evt.set()
 
 	def set_status(self, sta):
 		"""Set new status and update status panel accordingly"""
+		logger.debug('set_status: %s -> %s', sta_names[self.status], sta_names[sta])
 		self.status = sta
 		self.s_status.set_text(sta_names[sta], self.style.status_colors[sta])
 
@@ -176,6 +210,12 @@ class Demo(object):
 
 	def show_info(self, text, lvl):
 		"""Show info on bottom panel"""
+		if lvl == inf_normal:
+			logger.info(text)
+		elif lvl == inf_warning:
+			logger.warning(text)
+		elif lvl == inf_error:
+			logger.error(text)
 		self.s_info.set_text(text, self.style.info_colors[lvl])
 
 	def x_show_info(self, text, lvl):

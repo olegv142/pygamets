@@ -16,6 +16,8 @@ See style.py for lookup algorithm details.
 
 import progress
 
+status_panel_h = 50
+
 default = {
 	'*' : {
 		'border'    : 1,
@@ -26,6 +28,9 @@ default = {
 	'TextLabel' : {
 		't_color'  : (0, 255, 0), # text color
 	},
+	'FrameWindow#background' : {
+		'border'    : 0,
+	},
 	'FrameWindow#result' : {
 		'f_color'   : (0, 0, 255),   # fill color
 		'b_color'   : (50, 0, 255),  # border color
@@ -33,6 +38,18 @@ default = {
 	'FrameWindow#activity' : {
 		'f_color'   : (0, 0, 255),   # fill color
 		'b_color'   : (50, 0, 255),  # border color
+	},
+	'LogWindow' : {
+		'border'     : 0,
+		'font_size'  : 10,
+		'left_margin': 8,
+		'top_margin' : 5,
+		'f_color'    : (0, 0, 0),
+		'font_face'  : 'consolas',
+		'norm_color' : (0, 255, 0),
+		'warn_color' : (255, 255, 0),
+		'err_color'  : (255, 0, 150),
+		'x_btn_size' : status_panel_h,
 	},
 	'PieProgressIndicator' : {
 		'f_color'     : (0, 0, 255), 
@@ -64,7 +81,13 @@ default = {
 	'TextLabel#info' : {
 		'font_size' : 24
 	},
-	'TextButton' : {
+	'TextButton[i]': {
+		'font_face' : 'lucidacalligraphy',
+		'font_size' : 24,
+		't_color'   : (0, 255, 0),  # text color
+		'tp_color'  : (0, 100, 0),  # text color in pressed state
+	},
+	'TextButton[START]' : {
 		't_color'  : (0, 255, 0),  # text color
 		'tp_color' : (0, 100, 0),  # text color in pressed state
 	},
@@ -97,7 +120,7 @@ default = {
 		'screen_w'      : 480,
 		'screen_h'      : 320,
 		'max_fps'       : 40,
-		'status_panel_h': 50,
+		'status_panel_h': status_panel_h,
 		'info_panel_h'  : 40,
 		'start_margin'  : 40,
 		'active_margin' : 25,

@@ -5,21 +5,6 @@ Window classes
 import gui, style, utils
 import pygame as pg
 
-class BckgWindow(gui.Window):
-	"""Window filling entire screen"""
-	_required_attrs = ('f_color',)
-
-	def __init__(self, st = None):
-		gui.Window.__init__(self, 0, 0, None, None)
-		self.style = style.bind(self, st)
-
-	def init(self, surface):
-		self.w, self.h = surface.get_size()
-		gui.Window.init(self, surface)
-
-	def draw(self):
-		pg.draw.rect(self.surface, self.style.f_color, self.frame())
-
 class FrameWindow(gui.Window):
 	"""Fixed size window with optional border"""
 	_required_attrs = ('f_color',)
@@ -33,7 +18,7 @@ class FrameWindow(gui.Window):
 		iframe = gui.Window.int_frame(self)
 		b = self.style.border
 		if b:
-			return utils.apply_margins(iframe, b, b)
+			return utils.apply_margins(iframe, b + 1, b + 1)
 		else:
 			return iframe
 
@@ -41,5 +26,6 @@ class FrameWindow(gui.Window):
 		frame = self.frame()
 		pg.draw.rect(self.surface, self.style.f_color, frame)
 		if self.style.border:
-			pg.draw.rect(self.surface, self.style.b_color, frame, self.style.border)
+			m = self.style.border // 2
+			pg.draw.rect(self.surface, self.style.b_color, utils.apply_margins(frame, m, m), self.style.border)
 

@@ -54,17 +54,29 @@ class View(object):
 		_, _, w, h = self.int_frame()
 		return w, h
 
+	def left(self):
+		return self.x
+
+	def right(self):
+		return self.x + self.w
+
+	def top(self):
+		return self.y
+
+	def bottom(self):
+		return self.y + self.h
+
 	def rect_to_screen(self, (x, y, w, h)):
 		"""Translates rectangle coordinates to the screen coordinate system"""
 		return self.screen_x + x, self.screen_y + y, w, h
 
 	def add_child(self, v, x, y):
-		"""Add child view. Note that x, y are relative to the the internal frame."""
+		"""Add child view. The x, y coordinates are relative to the parent"""
 		assert v.parent is None
 		ix, iy, iw, ih = self.int_frame()
-		v.x, v.y = ix + x, iy + y
-		assert iw is None or x + v.w <= iw
-		assert ih is None or y + v.h <= ih
+		assert ix <= x and x + v.w <= ix + iw
+		assert iy <= y and y + v.h <= iy + ih
+		v.x, v.y = x, y
 		v.parent = self
 		self.children.append(v)
 
@@ -195,9 +207,10 @@ class Window(View):
 			self.in_focus.set_focus(False)
 		self.in_focus = None
 
-	def discard(self):
+	def close(self):
 		"""Remove window from the screen"""
-		self.get_screen().discard(self)
+		if self.screen:
+			self.screen.close(self)
 
 	def fini(self):
 		"""Finalization routine called on removing window from the screen"""
@@ -272,7 +285,7 @@ class Screen(object):
 		wnd.redraw()
 		self.set_updated([wnd.frame()])
 
-	def discard(self, wnd):
+	def close(self, wnd):
 		"""Remove given window from the screen"""
 		wnd.apply_recursively(lambda v: v.fini())
 		wnd.screen = None
