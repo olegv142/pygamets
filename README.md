@@ -1,6 +1,6 @@
-# pygame-ts
+# pygamets
 
-![](https://github.com/olegv142/pygame-ts/blob/master/demo.png)
+![](https://github.com/olegv142/pygamets/blob/master/demo.png)
 
 GUI micro-framework with touch screen support for [Pygame](http://www.pygame.org) frame-buffer applications.
 Designed for building simple GUI in embedded applications with focus on multi-threading.

@@ -152,6 +152,7 @@ class PlotView(Frame):
 			pg.draw.aalines(self.surface, self.style.line_color, False, points)
 
 class PlotButton(Button):
+	"""The button with X,Y curve plot"""
 	_required_attrs = ('f_color', 'margin', 'line_color', 'linep_color')
 
 	def __init__(self, w, h, st = None):
