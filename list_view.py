@@ -12,8 +12,7 @@ class ListView(Frame):
 	_required_attrs = ('font_face', 'font_size', 'left_margin', 'top_margin', 'f_color')
 
 	def __init__(self, w, h, st = None):
-		Frame.__init__(self, w, h)
-		self.style = style.bind(self, st)
+		Frame.__init__(self, w, h, st)
 		self.font = pg.font.SysFont(self.style.font_face, self.style.font_size)
 		_, ih = self.int_size()
 		self.n = (ih - self.style.top_margin) // self.font.get_height()

@@ -7,9 +7,12 @@ Generic measuring device GUI example
 import env
 import app, gui, utils, button, label, battery, progress, plot, style, localize
 import pygame, sys, os, time, threading, functools
+from plot_notebook import PlotNotebook
 from log_view import LogWindow
 from frame import Frame
 from style import Style
+import random
+import math
 
 import logging
 logger = logging.getLogger('demo')
@@ -40,6 +43,10 @@ inf_normal  = 0
 inf_warning = 1
 inf_error   = 2
 
+def gauss(x, a, c, s):
+	t = (x - c) / float(s)
+	return a * math.exp(-t*t/2.)
+
 class Demo(object):
 	"""Demo application with separate thread"""
 	_required_attrs = (
@@ -64,6 +71,9 @@ class Demo(object):
 		self.s_progress   = None # Progress indicator
 		self.s_remaining  = None # Remaining time
 		self.s_result     = None # Result screen
+		self.s_log_window = None # Log window
+		self.s_plot_btn   = None # Plot button
+		self.s_plot_window= None # Plot window
 		self.worker       = threading.Thread(target = self.x_worker)
 		self.worker.daemon= True
 		self.start_time   = None
@@ -92,13 +102,13 @@ class Demo(object):
 		log_btn.clicked.connect(self.show_log)
 		utils.add_top_right(self.s_background, log_btn)
 
-		plot_btn = plot.PlotButton(status_panel_h, status_panel_h)
-		plot_btn.clicked.connect(self.show_plot)
-		utils.add_top_right(self.s_background, plot_btn, next_to = log_btn)
+		self.s_plot_btn = plot.PlotButton(status_panel_h, status_panel_h)
+		self.s_plot_btn.clicked.connect(self.show_plot)
+		utils.add_top_right(self.s_background, self.s_plot_btn, next_to = log_btn)
 
 		self.s_battery = battery.BatteryIndicator(self.style.batt_width, status_panel_h - 2 * self.style.batt_margin)
 		self.s_battery.set_charge(self.style.batt_charge)
-		utils.add_top_right(self.s_background, self.s_battery, self.style.batt_margin, self.style.batt_margin, next_to = plot_btn)
+		utils.add_top_right(self.s_background, self.s_battery, self.style.batt_margin, self.style.batt_margin, next_to = self.s_plot_btn)
 
 		self.s_status = label.TextLabel(self.s_battery.left() - close_btn.right(), status_panel_h, Style(tag='status'))
 		utils.add_top_left(self.s_background, self.s_status, next_to = close_btn)
@@ -114,14 +124,19 @@ class Demo(object):
 		self.s_log_window = LogWindow(W, H)
 		logger.addHandler(self.s_log_window.handler())
 		self.screen.show(self.s_background)
+		
+		self.s_plot_window = PlotNotebook(W, H)
 
 		timer = app.Timer(self.idle_timer, 1000, True)
 		app.instance.add_timer(timer)
 
-		X, Y = (1001, 1002, 1002.2, 1002.1, 1005), (1001, 1001.1, 1001.5, 1005, 1001)
-		plot_btn.set_data((X, Y))
-		self.plot_view = plot.PlotView(W, H)
-		self.plot_view.set_data((X, Y))
+	def add_plot(self, X, Y, info):
+		self.s_plot_btn.set_data((X, Y))
+		self.s_plot_window.add_plot(X, Y, info)
+
+	def clear_plot(self):
+		self.s_plot_btn.set_data(None)
+		self.s_plot_window.clear_plots()
 
 	def show_log(self):
 		"""Show log window"""
@@ -130,8 +145,7 @@ class Demo(object):
 
 	def show_plot(self):
 		"""Show plot window"""
-		w = gui.Window(0, 0, self.plot_view)
-		self.screen.show(w)
+		self.screen.show(self.s_plot_window)
 
 	def idle_timer(self):
 		logger.debug('idle_timer')
@@ -184,6 +198,14 @@ class Demo(object):
 		"""Close activity screen from worker thread"""
 		app.instance.add_job(self.close_activity_screen)
 
+	def plot_some_data(self):
+		"""Add some data to the plot window"""
+		X = range(4000)
+		Y1 = [random.random() for _ in X]
+		Y2 = [gauss(x, 1, 500, 50) + gauss(x, 2, 2500, 20) for x in X]
+		self.add_plot(X, Y1, 'random data plot')
+		self.add_plot(X, Y2, 'gaussian peaks')
+
 	def show_result_screen(self):
 		"""Show results screen"""
 		W, H, margin = self.style.screen_w, self.style.screen_h, self.style.result_margin
@@ -202,6 +224,7 @@ class Demo(object):
 		txt.set_text('Life is good')
 		utils.add_top_left(s, txt)
 		self.screen.show(s)
+		self.plot_some_data()
 
 	def x_show_result_screen(self):
 		"""Show results screen from worker thread"""
@@ -210,6 +233,7 @@ class Demo(object):
 	def start_activity(self):
 		"""Start button handler"""
 		logger.info('starting')
+		self.clear_plot()
 		self.start_evt.set()
 
 	def cancel_activity(self):

@@ -20,22 +20,16 @@ status_panel_h = 40
 
 default = {
 	'*' : {
-		'border'    : 1,
-		'f_color'   : (0, 0, 150),   # fill color
-		'font_face' : 'Arial',
-		'font_size' : 72
-	},
-	'TextLabel' : {
-		't_color'  : (0, 255, 0), # text color
-	},
-	'Frame#background' : {
 		'border'    : 0,
+		'f_color'   : (0, 0, 150),   # fill color
 	},
 	'Frame#result' : {
+		'border'    : 1,
 		'f_color'   : (0, 0, 255),   # fill color
 		'b_color'   : (50, 0, 255),  # border color
 	},
 	'Frame#activity' : {
+		'border'    : 1,
 		'f_color'   : (0, 0, 255),   # fill color
 		'b_color'   : (50, 0, 255),  # border color
 	},
@@ -43,7 +37,6 @@ default = {
 		'x_btn_size' : status_panel_h,
 	},
 	'LogView' : {
-		'border'     : 0,
 		'font_size'  : 12,
 		'left_margin': 8,
 		'top_margin' : 5,
@@ -53,8 +46,32 @@ default = {
 		'warn_color' : (255, 255, 0),
 		'err_color'  : (255, 0, 150),
 	},
+	'PlotNotebook' : {
+		'panel_size' : status_panel_h
+	},
+	'PlotNotebook.Frame.TextButton' : {
+		'font_size': 18,
+		'font_face': 'freesans',
+		'f_color'  : (0, 0, 0),
+		't_color'  : (0, 255, 0), # text color
+		'tp_color' : (0, 100, 0), # text color
+	},
+	'PlotNotebook.Frame.TextLabel#count' : {
+		'font_size': 18,
+		'font_face': 'freesans',
+		'f_color'  : (0, 0, 0),
+		't_color'  : (0, 255, 0), # text color
+	},
+	'PlotNotebook.Frame.TextLabel#info' : {
+		'font_size': 18,
+		'font_face': 'freesans',
+		'f_color'  : (0, 0, 0),
+		't_color'  : (255, 255, 0), # text color
+	},
+	'PlotNotebook.Frame' : {
+		'f_color'  : (0, 0, 0),
+	},
 	'PlotView' : {
-		'border'       : 0,
 		'font_face'    : 'freesans',
 		'font_size'    : 16,
 		'f_color'      : (0, 0, 0),
@@ -83,12 +100,17 @@ default = {
 		'done_color'  : (0, 255, 0),
 		'todo_color'  : (100, 100, 100),
 	},
+	'TextLabel' : {
+		'font_face' : 'Arial',
+		't_color'   : (0, 255, 0), # text color
+	},
 	'TextLabel#remaining' : {
 		'font_size' : 64,
 		't_color'   : (0, 255, 255), # text color
 		'f_color'   : (0, 0, 255),   # fill color
 	},
 	'TextLabel#result' : {
+		'font_size' : 72,
 		't_color'   : (0, 255, 0), # text color
 		'f_color'   : (0, 0, 255), # fill color
 	},
@@ -99,7 +121,6 @@ default = {
 		'font_size' : 24
 	},
 	'PlotButton': {
-		'border'      : 0,
 		'margin'      : 10, 
 		'line_color'  : (255, 0, 255),
 		'linep_color' : (100, 0, 100),
@@ -115,6 +136,9 @@ default = {
 		'tp_color' : (0, 100, 0),  # text color in pressed state
 	},
 	'PulseTextButton' : {
+		'font_face' : 'Arial',
+		'font_size' : 72,
+		't_color'   : (0, 255, 0), # text color
 		't1_color'  : (255, 255, 255),
 		't0_color'  : (0, 0, 255),
 		'tp_color'  : (100, 0, 100),  # text color in pressed state
@@ -136,6 +160,7 @@ default = {
 		'charge_color' : (0, 255, 0),
 		'alert_color'  : (255, 0, 0),
 		'batt_color'   : (100, 100, 100),
+		'font_face'    : 'Arial',
 		'font_size'    : 22,
 		't_color'      : (255, 255, 255)
 	},

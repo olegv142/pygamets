@@ -69,8 +69,7 @@ class PlotView(Frame):
 		)
 
 	def __init__(self, w, h, st = None):
-		Frame.__init__(self, w, h)
-		self.style = style.bind(self, st)
+		Frame.__init__(self, w, h, st)
 		self.font = pg.font.SysFont(self.style.font_face, self.style.font_size)
 		self.data = None
 
