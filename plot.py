@@ -148,7 +148,7 @@ class PlotView(Frame):
 		# Draw line through the sequence of points
 		points = utils.xy_path(X, Y, plot_rect, screen_rect)
 		if len(points) > 1:
-			pg.draw.aalines(self.surface, self.style.line_color, False, points)
+			pg.draw.lines(self.surface, self.style.line_color, False, points)
 
 class PlotButton(Button):
 	"""The button with X,Y curve plot"""
@@ -190,7 +190,7 @@ class PlotButton(Button):
 	def draw(self):
 		Button.draw(self)
 		if self.curve is not None:
-			pg.draw.aalines(self.surface,
+			pg.draw.lines(self.surface,
 					self.style.line_color if not self.is_pressed else self.style.linep_color,
 					False, self.curve
 				)
