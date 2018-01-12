@@ -98,11 +98,11 @@ default = {
 	'TextLabel#info' : {
 		'font_size' : 24
 	},
-	'TextButton[p]': {
-		'font_face' : 'freesans',
-		'font_size' : 24,
-		't_color'   : (0, 255, 0),  # text color
-		'tp_color'  : (0, 100, 0),  # text color in pressed state
+	'PlotButton': {
+		'border'      : 0,
+		'margin'      : 10, 
+		'line_color'  : (255, 0, 255),
+		'linep_color' : (100, 0, 100),
 	},
 	'TextButton[i]': {
 		'font_face' : 'freesans',

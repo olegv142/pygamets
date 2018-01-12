@@ -88,17 +88,17 @@ class Demo(object):
 		close_btn.clicked.connect(self.quit)
 		utils.add_top_left(self.s_background, close_btn)
 
-		plot_btn = button.TextButton(status_panel_h, status_panel_h, Style(name='p'))
-		plot_btn.clicked.connect(self.show_plot)
-		utils.add_top_right(self.s_background, plot_btn)
-
 		log_btn = button.TextButton(status_panel_h, status_panel_h, Style(name='i'))
 		log_btn.clicked.connect(self.show_log)
-		utils.add_top_right(self.s_background, log_btn, next_to = plot_btn)
+		utils.add_top_right(self.s_background, log_btn)
+
+		plot_btn = plot.PlotButton(status_panel_h, status_panel_h)
+		plot_btn.clicked.connect(self.show_plot)
+		utils.add_top_right(self.s_background, plot_btn, next_to = log_btn)
 
 		self.s_battery = battery.BatteryIndicator(self.style.batt_width, status_panel_h - 2 * self.style.batt_margin)
 		self.s_battery.set_charge(self.style.batt_charge)
-		utils.add_top_right(self.s_background, self.s_battery, self.style.batt_margin, self.style.batt_margin, next_to = log_btn)
+		utils.add_top_right(self.s_background, self.s_battery, self.style.batt_margin, self.style.batt_margin, next_to = plot_btn)
 
 		self.s_status = label.TextLabel(self.s_battery.left() - close_btn.right(), status_panel_h, Style(tag='status'))
 		utils.add_top_left(self.s_background, self.s_status, next_to = close_btn)
@@ -118,6 +118,11 @@ class Demo(object):
 		timer = app.Timer(self.idle_timer, 1000, True)
 		app.instance.add_timer(timer)
 
+		X, Y = (1001, 1002, 1002.2, 1002.1, 1005), (1001, 1001.1, 1001.5, 1005, 1001)
+		plot_btn.set_data((X, Y))
+		self.plot_view = plot.PlotView(W, H)
+		self.plot_view.set_data((X, Y))
+
 	def show_log(self):
 		"""Show log window"""
 		logger.error('just test error message, the long string will be truncated truncated truncated truncated truncated truncated truncated truncated')
@@ -125,10 +130,7 @@ class Demo(object):
 
 	def show_plot(self):
 		"""Show plot window"""
-		W, H = self.style.screen_w, self.style.screen_h
-		p = plot.PlotView(W, H)
-		p.set_data(((1001, 1002, 1002.2, 1002.1, 1005), (1001, 1001.1, 1001.5, 1005, 1001)))
-		w = gui.Window(0, 0, p)
+		w = gui.Window(0, 0, self.plot_view)
 		self.screen.show(w)
 
 	def idle_timer(self):

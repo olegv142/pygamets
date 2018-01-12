@@ -2,8 +2,9 @@
 X,Y curve plotting
 """
 
-import button, utils, style
+import utils, style
 from frame import Frame
+from button import Button
 import pygame as pg
 import math
 from collections import namedtuple
@@ -149,3 +150,47 @@ class PlotView(Frame):
 		points = utils.xy_path(X, Y, plot_rect, screen_rect)
 		if len(points) > 1:
 			pg.draw.aalines(self.surface, self.style.line_color, False, points)
+
+class PlotButton(Button):
+	_required_attrs = ('f_color', 'margin', 'line_color', 'linep_color')
+
+	def __init__(self, w, h, st = None):
+		Button.__init__(self, w, h, st)
+		self.curve = None
+
+	def on_clicked(self):
+		"""Mouse clicked handler"""
+		if self.curve is None:
+			# Ignore if data is not set
+			return
+		Button.on_clicked(self)
+
+	def set_data(self, xy):
+		"""
+		Set data to plot as (X, Y) tuple or None.
+		The ordering of the points along X axis does not matter.
+		The drawing algorithm will sort them in proper order.
+		"""
+		if xy is None:
+			self.curve = None
+		else:
+			# X,Y data to plot
+			X, Y = xy
+			# Screen area
+			ix, iy, iw, ih = utils.apply_margins(self.rect_to_screen(self.int_frame()), self.style.margin, self.style.margin)
+			px, py = min(X), min(Y)
+			pw, ph = max(X) - px, max(Y) - py
+			if pw <= 0: pw = 1.
+			if ph <= 0: ph = 1.
+			self.curve = utils.xy_path(X, Y, (px, py, pw, ph), (ix, iy + ih, iw, -ih))
+			if len(self.curve) < 2:
+				self.curve = None
+		self.update()
+
+	def draw(self):
+		Button.draw(self)
+		if self.curve is not None:
+			pg.draw.aalines(self.surface,
+					self.style.line_color if not self.is_pressed else self.style.linep_color,
+					False, self.curve
+				)
