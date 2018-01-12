@@ -22,12 +22,15 @@ class Style(object):
 		Set reference to the owner object - typically the view instance.
 		We use owner owner class and parent link to lookup attribute defaults.
 		"""
+		assert self._owner is None
+		assert owner is not None
 		self._owner = owner
 
-	def copy(self):
+	def copy(self, *args, **kwargs):
 		"""Create clone of the style with owner detached"""
 		s = Style()
 		s._attrs = self._attrs.copy()
+		s._attrs.update(*args, **kwargs)
 		return s
 
 	def require(self, attrs):
