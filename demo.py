@@ -5,7 +5,7 @@ Generic measuring device GUI example
 """
 
 import env
-import app, gui, utils, button, label, battery, progress, style, localize
+import app, gui, utils, button, label, battery, progress, plot, style, localize
 import pygame, sys, os, time, threading, functools
 from log_view import LogWindow
 from frame import Frame
@@ -88,9 +88,13 @@ class Demo(object):
 		close_btn.clicked.connect(self.quit)
 		utils.add_top_left(self.s_background, close_btn)
 
+		plot_btn = button.TextButton(status_panel_h, status_panel_h, Style(name='p'))
+		plot_btn.clicked.connect(self.show_plot)
+		utils.add_top_right(self.s_background, plot_btn)
+
 		log_btn = button.TextButton(status_panel_h, status_panel_h, Style(name='i'))
 		log_btn.clicked.connect(self.show_log)
-		utils.add_top_right(self.s_background, log_btn)
+		utils.add_top_right(self.s_background, log_btn, next_to = plot_btn)
 
 		self.s_battery = battery.BatteryIndicator(self.style.batt_width, status_panel_h - 2 * self.style.batt_margin)
 		self.s_battery.set_charge(self.style.batt_charge)
@@ -118,6 +122,14 @@ class Demo(object):
 		"""Show log window"""
 		logger.error('just test error message, the long string will be truncated truncated truncated truncated truncated truncated truncated truncated')
 		self.screen.show(self.s_log_window)
+
+	def show_plot(self):
+		"""Show plot window"""
+		W, H = self.style.screen_w, self.style.screen_h
+		p = plot.PlotView(W, H)
+		p.set_data(((1001, 1002, 1002.2, 1002.1, 1005), (1001, 1001.1, 1001.5, 1005, 1001)))
+		w = gui.Window(0, 0, p)
+		self.screen.show(w)
 
 	def idle_timer(self):
 		logger.debug('idle_timer')

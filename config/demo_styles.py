@@ -16,7 +16,7 @@ See style.py for lookup algorithm details.
 
 import progress
 
-status_panel_h = 50
+status_panel_h = 40
 
 default = {
 	'*' : {
@@ -53,6 +53,21 @@ default = {
 		'warn_color' : (255, 255, 0),
 		'err_color'  : (255, 0, 150),
 	},
+	'PlotView' : {
+		'border'       : 0,
+		'font_face'    : 'freesans',
+		'font_size'    : 16,
+		'f_color'      : (0, 0, 0),
+		'label_color'  : (255, 255, 0),
+		'axis_color'   : (255, 0, 255),
+		'line_color'   : (0, 255, 0),
+		'margin'       : 5,
+		'label_offset' : 5,
+		'maj_tick_len' : 4,
+		'min_tick_len' : 2,
+		'maj_ticks'    : 7,
+		'xrange'       : .01
+	},
 	'PieProgressIndicator' : {
 		'f_color'     : (0, 0, 255), 
 		'done_color'  : (0, 255, 0),
@@ -82,6 +97,12 @@ default = {
 	},
 	'TextLabel#info' : {
 		'font_size' : 24
+	},
+	'TextButton[p]': {
+		'font_face' : 'freesans',
+		'font_size' : 24,
+		't_color'   : (0, 255, 0),  # text color
+		'tp_color'  : (0, 100, 0),  # text color in pressed state
 	},
 	'TextButton[i]': {
 		'font_face' : 'freesans',
@@ -115,7 +136,7 @@ default = {
 		'charge_color' : (0, 255, 0),
 		'alert_color'  : (255, 0, 0),
 		'batt_color'   : (100, 100, 100),
-		'font_size'    : 24,
+		'font_size'    : 22,
 		't_color'      : (255, 255, 255)
 	},
 	'Demo' : {
@@ -123,7 +144,7 @@ default = {
 		'screen_h'      : 320,
 		'max_fps'       : 40,
 		'status_panel_h': status_panel_h,
-		'info_panel_h'  : 40,
+		'info_panel_h'  : status_panel_h,
 		'start_margin'  : 40,
 		'active_margin' : 25,
 		'result_margin' : 25,
@@ -131,7 +152,7 @@ default = {
 		'ini_progress'  : .1,
 		'fin_progress'  : .07,
 		'batt_width'    : 80,
-		'batt_margin'   : 10,
+		'batt_margin'   : 5,
 		'batt_charge'   : .8,
 		'close_btn_sz'  : 50,
 		'status_colors' : {

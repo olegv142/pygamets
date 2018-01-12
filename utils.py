@@ -64,3 +64,24 @@ def add_left_bottom(parent, v, xmargin = 0, ymargin = 0, next_to = None):
 		y += h
 	y -= v.h + 2 * ymargin
 	parent.add_child(v, x + xmargin, y + ymargin)
+
+def map_to_screen((fr_x, fr_y, fr_w, fr_h), (to_x, to_y, to_w, to_h)):
+	"""Returns pair of axis transform functions mapping from first rectangle area to the second"""
+	w = to_w - 1 if to_w > 0 else to_w + 1
+	h = to_h - 1 if to_h > 0 else to_h + 1
+	return (
+			lambda x: int(.5 + to_x + (w - 1) * (x - fr_x) / fr_w),
+			lambda y: int(.5 + to_y + (h - 1) * (y - fr_y) / fr_h)
+		)
+
+def xy_path(X, Y, origin_rect, screen_rect):
+	"""Represent X,Y curve as sequence of points in the screen coordinates system"""
+	ox, oy, ow, oh = origin_rect
+	sx, sy, sw, sh = screen_rect
+	xpix = [int(.5 + (sw - 1) * (x - ox) / ow) for x in X]
+	yvals = [None]*sw
+	for i, p in enumerate(xpix):
+		if 0 <= p < sw:
+			yvals[p] = max(Y[i], yvals[p])
+	_, y2screan = map_to_screen(origin_rect, screen_rect)
+	return [(i + sx, y2screan(v)) for i, v in enumerate(yvals) if v is not None]
