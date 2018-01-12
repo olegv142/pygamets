@@ -23,12 +23,16 @@ We added 2 useful facilities there:
 - jobs for scheduling actions that must be executed ASAP in the context of the event loop
 
 We provided GUI base classes to serve as generic building blocks for applications as well as several ready to use
-GUI elements such as buttons, labels, progress and battery charge indicators.
+GUI elements such as buttons, labels, progress and battery charge indicators, graph plotter and log viewer.
 
 The styles framework serves as a convenient way of setting various parameters in CSS-like manner. It separates
 parameters storage from the code using them which leads to cleaner code and simplify visual appearance tuning.
 
 The textual elements rely on the global text translation table for the sake of GUI localization.
+
+The log viewer widget is collecting last log records using standard logging module. So the application
+developer can get all necessary debugging information right on the screen without using remote terminal access to the target system.
+The data plotter widget helps to visualize arbitrary data represented as array of (x,y) samples.
 
 The demo application is provided as working example of building simple GUI in multi-threaded application.
 To launch demo execute `python demo.py` or (on linux) `./demo.py`.
