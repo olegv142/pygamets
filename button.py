@@ -2,28 +2,50 @@
 Button classes
 """
 
-import app, gui, style, utils
+import app, style, utils
 import pygame as pg
+from gui import Signal
+from frame import Frame
 from localize import localize
 
-class StyledButton(gui.Button):
+class Button(Frame):
+	"""The button is interactive view with several ready to use signals"""
 	def __init__(self, w, h, st = None):
-		gui.Button.__init__(self, w, h)
-		self.style = style.bind(self, st)
+		Frame.__init__(self, w, h, st)
+		self.interactive = True
+		self.is_pressed = False
+		self.clicked = Signal()
+		self.pressed = Signal()
+		self.focus_changed = Signal()
 		self.pressed.connect(self.pressed_cb)
 
 	def pressed_cb(self, pressed):
+		"""Button pressed callback"""
 		self.update()
 
-class RectButton(StyledButton):
+	def on_pressed(self, pressed):
+		"""Mouse pressed handler"""
+		self.is_pressed = pressed
+		self.pressed(pressed)
+
+	def on_clicked(self):
+		"""Mouse clicked handler"""
+		self.clicked()
+
+	def set_focus(self, in_focus):
+		"""Focus set/clear handler"""
+		Frame.set_focus(self, in_focus)
+		self.focus_changed(in_focus)
+
+class RectButton(Button):
 	"""Rectangular button with optional border"""
 	_required_attrs = ('f_color', 'p_color')
 
 	def __init__(self, w, h, st = None):
-		StyledButton.__init__(self, w, h, st)
+		Button.__init__(self, w, h, st)
 
 	def init(self, surface):
-		StyledButton.init(self, surface)
+		Button.init(self, surface)
 		if self.style.name:
 			font = pg.font.SysFont(self.style.font_face, self.style.font_size)
 			self.label = font.render(localize(self.style.name), True, self.style.t_color)
@@ -39,15 +61,15 @@ class RectButton(StyledButton):
 		if self.label:
 			utils.blit_centered(self.surface, self.label, self.frame())
 
-class TextButton(StyledButton):
+class TextButton(Button):
 	"""The Button with only text label drawn"""
 	_required_attrs = ('name', 'font_face', 'font_size', 't_color', 'tp_color')
 
 	def __init__(self, w, h, st = None):
-		StyledButton.__init__(self, w, h, st)
+		Button.__init__(self, w, h, st)
 
 	def init(self, surface):
-		StyledButton.init(self, surface)
+		Button.init(self, surface)
 		name = localize(self.style.name)
 		assert name
 		font = pg.font.SysFont(self.style.font_face, self.style.font_size)
@@ -58,12 +80,12 @@ class TextButton(StyledButton):
 		label = self.label if not self.is_pressed else self.p_label
 		utils.blit_centered(self.surface, label, self.frame())
 
-class XButton(StyledButton):
+class XButton(Button):
 	"""The X-mark button"""
 	_required_attrs = ('x_color', 'xp_color', 'x_width', 'x_margin')
 
 	def __init__(self, w, st = None):
-		StyledButton.__init__(self, w, w, st)
+		Button.__init__(self, w, w, st)
 
 	def draw(self):
 		color = self.style.x_color if not self.is_pressed else self.style.xp_color
@@ -71,15 +93,15 @@ class XButton(StyledButton):
 		pg.draw.line(self.surface, color, (x, y), (x + w, y + h), self.style.x_width)
 		pg.draw.line(self.surface, color, (x + w, y), (x, y + h), self.style.x_width)
 
-class PulseTextButton(StyledButton):
+class PulseTextButton(Button):
 	"""The fancy pulsing text button"""
 	_required_attrs = ('name', 'font_face', 'font_size', 't0_color', 't1_color', 'tp_color', 'interval', 'period', 'decay')
 
 	def __init__(self, w, h, st = None):
-		StyledButton.__init__(self, w, h, st)
+		Button.__init__(self, w, h, st)
 
 	def init(self, surface):
-		StyledButton.init(self, surface)
+		Button.init(self, surface)
 		name = localize(self.style.name)
 		self.font = pg.font.SysFont(self.style.font_face, self.style.font_size)
 		self.p_label = self.font.render(name, True, self.style.tp_color)
@@ -89,7 +111,7 @@ class PulseTextButton(StyledButton):
 		self.phase = 0
 
 	def fini(self):
-		StyledButton.fini(self)
+		Button.fini(self)
 		self.timer.cancel()
 
 	def on_timer(self):

@@ -7,8 +7,6 @@ import pygame as pg
 
 class Frame(gui.View):
 	"""Fixed size window with optional border"""
-	_required_attrs = ('f_color',)
-
 	def __init__(self, w, h, st = None):
 		gui.View.__init__(self, w, h)
 		self.style = style.bind(self, st)
@@ -24,7 +22,8 @@ class Frame(gui.View):
 
 	def draw(self):
 		frame = self.frame()
-		pg.draw.rect(self.surface, self.style.f_color, frame)
+		if self.style.f_color is not None:
+			pg.draw.rect(self.surface, self.style.f_color, frame)
 		if self.style.border:
 			m = self.style.border // 2
 			pg.draw.rect(self.surface, self.style.b_color, utils.apply_margins(frame, m, m), self.style.border)

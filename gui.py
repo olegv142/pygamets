@@ -417,34 +417,6 @@ class Signal(object):
 		for cb in self.targets:
 			cb(*args, **kwargs)
 
-class Button(View):
-	"""The button is interactive view with several ready to use signals"""
-	def __init__(self, w, h):
-		View.__init__(self, w, h)
-		self.interactive = True
-		self.is_pressed = False
-		self.clicked = Signal()
-		self.pressed = Signal()
-		self.focus_changed = Signal()
-
-	def int_frame(self):
-		"""No child elements expected"""
-		return None
-
-	def on_pressed(self, pressed):
-		"""Mouse pressed handler"""
-		self.is_pressed = pressed
-		self.pressed(pressed)
-
-	def on_clicked(self):
-		"""Mouse clicked handler"""
-		self.clicked()
-
-	def set_focus(self, in_focus):
-		"""Focus set/clear handler"""
-		View.set_focus(self, in_focus)
-		self.focus_changed(in_focus)
-
 def quit():
 	"""Quit event loop by posting QUIT event"""
 	pg.event.post(pg.event.Event(pg.QUIT))

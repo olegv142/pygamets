@@ -9,7 +9,7 @@ import pygame as pg
 
 class ListView(Frame):
 	"""The list of coloured strings"""
-	_required_attrs = ('font_face', 'font_size', 'left_margin', 'top_margin') + Frame._required_attrs
+	_required_attrs = ('font_face', 'font_size', 'left_margin', 'top_margin', 'f_color')
 
 	def __init__(self, w, h, st = None):
 		Frame.__init__(self, w, h)

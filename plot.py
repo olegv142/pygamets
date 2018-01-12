@@ -59,11 +59,11 @@ def get_ticks(l, r, xmaj, xrng):
 class PlotView(Frame):
 	"""X,Y curve plot"""
 	_required_attrs = (
-			'font_face', 'font_size',
+			'font_face', 'font_size', 'f_color',
 			'label_color', 'axis_color', 'line_color',
 			'margin', 'label_offset', 'maj_tick_len', 'min_tick_len',
 			'maj_ticks', 'xrange'
-		) + Frame._required_attrs
+		)
 
 	def __init__(self, w, h, st = None):
 		Frame.__init__(self, w, h)
