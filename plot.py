@@ -14,6 +14,8 @@ Tick = namedtuple('Tick', ('val', 'vabel'))
 def get_ticks_params(v, xmaj):
 	"""Find ticks parameters for the given value range so that the number of major ticks does not exceed xmaj"""
 	power = 0.
+	if v <= 0:
+		return TicksParams(1, 0, 2)
 	a, b = xmaj / 2., xmaj * 5.
 	while v < a:
 		v *= 10.
@@ -30,7 +32,7 @@ def get_ticks_params(v, xmaj):
 
 def get_ticks(l, r, xmaj, xrng):
 	"""Get the set of ticks for the given range"""
-	assert l < r
+	assert l <= r
 	ticks = []
 	d = float(r - l)
 	p = get_ticks_params(d, xmaj)
