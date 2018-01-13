@@ -12,6 +12,13 @@ def blit_centered(dst, surf, rect):
 	sw, sh = surf.get_size()
 	dst.blit(surf, (x + (w - sw) // 2, y + (h - sh) // 2))
 
+def draw_lines(surface, line_color, closed, points):
+	"""Simple wrapper for drawing multi segment line"""
+	if surface.get_bitsize() >= 24:
+		pg.draw.aalines(surface, line_color, closed, points)
+	else:
+		pg.draw.lines(surface, line_color, closed, points)
+
 def draw_sector(surface, color, center, radius, from_angle, to_angle):
 	"""Draw filled sector as filled polygon"""
 	x, y = center
