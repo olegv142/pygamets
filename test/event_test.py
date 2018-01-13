@@ -1,9 +1,12 @@
 #!/usr/bin/python
 
+"""
+Raw events reader test
+"""
+
 import sys, time
 sys.path.append('..')
-
-import events
+from pygamets import events
 
 while True:
 	time.sleep(.05)

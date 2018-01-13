@@ -4,6 +4,9 @@ Touch screen calibration management code
 
 import os, math, imp
 
+config_folder = 'config'
+config_file   = 'calibration'
+
 def det3(
 	a11, a12, a13,
 	a21, a22, a23,
@@ -68,11 +71,11 @@ def build(screen_pts, touch_pts):
 
 def config_dir():
 	"""Returns the path to config directory with calibration file"""
-	return os.path.join(os.path.abspath(os.path.dirname(__file__)), 'config')
+	return os.path.join(os.path.abspath(os.path.dirname(__file__)), config_folder)
 
 def config_path():
 	"""Returns the full path to the calibration file"""
-	return os.path.join(config_dir(), __name__ + '.py')
+	return os.path.join(config_dir(), config_file + '.py')
 
 def save(calib):
 	"""Save calibration coefficients"""
@@ -88,8 +91,8 @@ def save(calib):
 
 def load():
 	"""Load calibration coefficients"""
-	m = imp.find_module(__name__, [config_dir()])
-	module = imp.load_module(__name__, m[0], m[1], m[2])
+	m = imp.find_module(config_file, [config_dir()])
+	module = imp.load_module(config_file, m[0], m[1], m[2])
 	return module.calib
 
 def to_screen_rel((x, y), calib):

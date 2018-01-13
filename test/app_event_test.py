@@ -1,10 +1,16 @@
 #!/usr/bin/python
 
+"""
+Test for pygame event loop with raw event
+reader installed by app instance
+"""
+
 import sys, time
 import pygame as pg
 
 sys.path.append('..')
-import app
+from pygamets import env
+from pygamets import app
 
 def print_event(e):
 	def fn():

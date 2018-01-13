@@ -14,7 +14,9 @@ The top level dictionary keys may have the following formats:
 See style.py for lookup algorithm details.
 """
 
-import progress
+import sys
+sys.path.append('..')
+from pygamets import progress
 
 status_panel_h = 40
 

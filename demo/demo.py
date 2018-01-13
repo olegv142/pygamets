@@ -4,24 +4,25 @@
 Generic measuring device GUI example
 """
 
-import env
-import app, gui, utils, button, label, battery, progress, plot, style, localize
-import pygame, sys, os, time, threading, functools
-from plot_notebook import PlotNotebook
-from log_view import LogWindow
-from frame import Frame
-from style import Style
-import random
-import math
+import pygame, sys, os, time, threading, functools, random, math, logging
 
-import logging
+sys.path.append('..')
+
+from pygamets import env
+from pygamets import app, gui, utils, button, label, battery, progress, plot, style, localize
+from pygamets.plot_notebook import PlotNotebook
+from pygamets.log_view import LogWindow
+from pygamets.frame import Frame
+from pygamets.style import Style
+
+import demo_styles
+style.set_styles_map(demo_styles.default)
+
+import demo_localization
+localize.set_str_map(demo_localization.default)
+
 logger = logging.getLogger('demo')
 logger.setLevel(logging.DEBUG)
-
-sys.path.append('config')
-import demo_styles, demo_localization
-style.styles = demo_styles
-localize.localization = demo_localization
 
 # Status values
 sta_none         = 0

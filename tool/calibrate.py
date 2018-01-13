@@ -1,13 +1,19 @@
 #!/usr/bin/python
 
+"""
+The touch screen calibration tool.
+Don't forget to run it under root user.
+"""
+
 import sys, os, time
 import pygame as pg
 import math
 
 sys.path.append('..')
-import events
-import calibration
-from events import read_events
+from pygamets import env
+from pygamets import events
+from pygamets import calibration
+from pygamets.events import read_events
 
 XMARK_SZ = 10
 XMARK_COLOR = (0, 255, 0)

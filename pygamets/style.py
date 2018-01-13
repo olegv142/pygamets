@@ -4,6 +4,13 @@ Cascading style sheets for GUI attributes
 
 import styles
 
+_styles_map = styles.default
+
+def set_styles_map(m):
+	"""Setup global styles map"""
+	global _styles_map
+	_styles_map = m
+
 class Style(object):
 	"""
 	The style object serves 2 purposes:
@@ -87,16 +94,16 @@ class Style(object):
 			path = '*'
 		if name is not None:
 			try:
-				return styles.default[path+'['+name+']'][key]
+				return _styles_map[path+'['+name+']'][key]
 			except KeyError:
 				pass
 		if tag is not None:
 			try:
-				return styles.default[path+'#'+tag][key]
+				return _styles_map[path+'#'+tag][key]
 			except KeyError:
 				pass
 		try:
-			return styles.default[path][key]
+			return _styles_map[path][key]
 		except KeyError:
 			pass
 		return None
