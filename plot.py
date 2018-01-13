@@ -10,7 +10,7 @@ import math
 from collections import namedtuple
 
 TicksParams = namedtuple('TicksParams', ('digit', 'power', 'minor_ticks'))
-Tick = namedtuple('Tick', ('val', 'vabel'))
+Tick = namedtuple('Tick', ('val', 'label'))
 
 def get_ticks_params(v, xmaj):
 	"""Find ticks parameters for the given value range so that the number of major ticks does not exceed xmaj"""
@@ -104,11 +104,18 @@ class PlotView(Frame):
 
 		# Plan plotting area
 		label_off = self.style.label_offset
-		off = label_off + self.style.maj_tick_len
-		plot_w = iw - ylabels_w - off
-		plot_h = ih - self.font.get_height() - off
+		axis_margin = label_off + self.style.maj_tick_len
+		left_margin = ylabels_w + axis_margin
+		if xlabels[0] is not None:
+			left_margin = max(left_margin, xlabels[0].get_width()//2)
+		right_margin = 0
+		if xlabels[-1] is not None:
+			right_margin = xlabels[-1].get_width()//2
+		bottom_margin = self.font.get_height() + axis_margin
+		plot_w = iw - left_margin - right_margin
+		plot_h = ih - bottom_margin
 		assert plot_w > 1 and plot_h > 1
-		orig_x = ix + ylabels_w + off
+		orig_x = ix + left_margin
 		orig_y = iy + plot_h
 
 		# So we need mapping from plot_rect to screen_rect
@@ -134,7 +141,7 @@ class PlotView(Frame):
 			pg.draw.line(self.surface, axis_color, (x, orig_y), (x, orig_y + tick_len))
 			if t is not None:
 				l = xlabels[i]
-				self.surface.blit(l, (x - l.get_width()/2, orig_y + off))
+				self.surface.blit(l, (x - l.get_width()//2, orig_y + axis_margin))
 
 		# Draw Y ticks and labels
 		for i, (v, t) in enumerate(yticks):
@@ -143,7 +150,7 @@ class PlotView(Frame):
 			pg.draw.line(self.surface, axis_color, (orig_x, y), (orig_x - tick_len, y))
 			if t is not None:
 				l = ylabels[i]
-				self.surface.blit(l, (orig_x - off - l.get_width(), y - l.get_height()/2))
+				self.surface.blit(l, (orig_x - axis_margin - l.get_width(), y - l.get_height()//2))
 
 		# Draw line through the sequence of points
 		points = utils.xy_path(X, Y, plot_rect, screen_rect)
