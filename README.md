@@ -58,6 +58,10 @@ Tested on Raspberry Pi zero W with Stretch lite installed equipped with 4inch 32
 Also works on windows without any modifications.
 
 ## Running demo
+You have to install pygame first
+```sh
+pip install pygame
+```
 On Raspberry Pi you should calibrate screen before first use of this GUI framework.
 ```sh
 cd tool
