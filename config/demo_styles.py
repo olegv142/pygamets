@@ -99,6 +99,7 @@ default = {
 		'ball_cnt'    : 12,
 		'done_color'  : (0, 255, 0),
 		'todo_color'  : (100, 100, 100),
+		'anti_alias'  : True,
 	},
 	'TextLabel' : {
 		'font_face' : 'Arial',
