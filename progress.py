@@ -3,6 +3,7 @@ Progress indicator widget
 """
 
 import pygame as pg
+import pygame.gfxdraw
 import app, gui, style, utils
 import math
 
@@ -54,19 +55,19 @@ class PieProgressIndicator(gui.View):
 		x, y, w, h = self.frame()
 		r = (w - 1) // 2
 		assert r > 0
-		center = (x + r, y + r)
+		cx, cy = x + r, y + r
 		pg.draw.rect(self.surface, self.style.f_color, (x, y, w, h))
 		# handle degenerate cases first
 		if self.progress >= 1:
-			pg.draw.circle(self.surface, self.style.done_color, center, r)
+			pg.gfxdraw.filled_circle(self.surface, cx, cy, r, self.style.done_color)
 			return
-		pg.draw.circle(self.surface, self.style.todo_color, center, r)
+		pg.gfxdraw.filled_circle(self.surface, cx, cy, r, self.style.todo_color)
 		if self.progress <= 0:
 			return
 		progress_angle = self.progress * 2 * math.pi
 		start_angle = (2 * math.pi * self.phase) / self.style.period
 		utils.draw_sector(
-				self.surface, self.style.done_color, center, r,
+				self.surface, self.style.done_color, (cx, cy), r,
 				start_angle, start_angle + progress_angle
 			)
 
@@ -108,7 +109,8 @@ class BallClockProgressIndicator(gui.View):
 		for i in range(cnt):
 			s = pg.Surface((d, d), pg.SRCALPHA, 32)
 			k = 1. / (1 + i*i)
-			pg.draw.circle(s, utils.merge_rgb(self.style.todo_color, self.style.done_color, k), (r, r), r)
+			color = utils.merge_rgb(self.style.todo_color, self.style.done_color, k)
+			pg.gfxdraw.filled_circle(s, r, r, r, color)
 			self.ball_imgs[i] = s
 
 	def fini(self):
