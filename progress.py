@@ -3,7 +3,7 @@ Progress indicator widget
 """
 
 import pygame as pg
-from pygame import gfxdraw
+import pygame.gfxdraw
 import app, gui, style, utils
 import math
 
@@ -110,8 +110,6 @@ class BallClockProgressIndicator(gui.View):
 			s = pg.Surface((d, d), pg.SRCALPHA, 32)
 			k = 1. / (1 + i*i)
 			color = utils.merge_rgb(self.style.todo_color, self.style.done_color, k)
-			if self.style.anti_alias:
-				pg.gfxdraw.aacircle(s, r, r, r, color)
 			pg.gfxdraw.filled_circle(s, r, r, r, color)
 			self.ball_imgs[i] = s
 
