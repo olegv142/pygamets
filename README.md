@@ -1,13 +1,13 @@
 # pygamets
 
+GUI micro-framework with touch screen support for [Pygame](http://www.pygame.org) frame-buffer applications.
+Designed for building simple GUI in embedded applications with focus on multi-threading.
+
 ![Main screen](https://github.com/olegv142/pygamets/blob/master/demo.png)
 ![Pie chart progress indicator](https://github.com/olegv142/pygamets/blob/master/progress.png)
 ![Another progress indicator](https://github.com/olegv142/pygamets/blob/master/progress2.png)
 ![Data plotting window](https://github.com/olegv142/pygamets/blob/master/plotter.png)
 ![Log view window](https://github.com/olegv142/pygamets/blob/master/log_view.png)
-
-GUI micro-framework with touch screen support for [Pygame](http://www.pygame.org) frame-buffer applications.
-Designed for building simple GUI in embedded applications with focus on multi-threading.
 
 ## What it does
 The touch screen events seen in /dev/input/mouse has incorrect position information so the touch screen support in pygame
