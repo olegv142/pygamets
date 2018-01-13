@@ -43,11 +43,12 @@ GUI elements such as buttons, labels, progress and battery charge indicators, gr
 The styles framework serves as a convenient way of setting various parameters in CSS-like manner. It separates
 parameters storage from the code using them which leads to cleaner code and simplify visual appearance tuning.
 
-The textual elements rely on the global text translation table for the sake of GUI localization.
+The textual elements rely on the global text translation table for the sake of GUI localization. You can see the localized
+START button label on the above screenshot.
 
 The log viewer widget is collecting last log records using standard logging module. So the application
 developer can get all necessary debugging information right on the screen without using remote terminal access to the target system.
-The data plotter widget helps to visualize arbitrary data represented as array of (x,y) samples.
+The data plotter widget helps to visualize arbitrary data represented as array of (x, y) samples.
 
 The demo application is provided as working example of building simple GUI in multi-threaded application.
 
