@@ -68,7 +68,12 @@ cd demo
 sudo ./demo.py
 ```
 To have demo running automatically on boot install systemd service demo/pygame-ts-demo.service
-You can find the installation instruction in the service file.
+```sh
+cd demo
+sudo cp pygame-ts-demo.service /etc/systemd/system/
+sudo systemctl enable pygame-ts-demo
+sudo systemctl start  pygame-ts-demo
+```
 
 On windows there is no need to calibrate anything. Just execute
 ```sh
