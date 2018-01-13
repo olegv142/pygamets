@@ -1,6 +1,6 @@
-Touch screen support for pygame frame-buffer applications
+GUI micro-framework with touch screen support for pygame frame-buffer applications.
 
-(C) 2013, Oleg Volkov <olegv142@gmail.com>
+(C) 2017, Oleg Volkov <olegv142@gmail.com>
 
 Redistribution and use in source and binary forms, with or without
 modification, are permitted provided that the following conditions are met:
