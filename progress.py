@@ -3,7 +3,7 @@ Progress indicator widget
 """
 
 import pygame as pg
-import pygame.gfxdraw
+from pygame import gfxdraw
 import app, gui, style, utils
 import math
 
