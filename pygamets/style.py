@@ -76,9 +76,9 @@ class Style(object):
 	@staticmethod
 	def _lookup_default(obj, name, tag, key, path = ''):
 		"""Lookup default value for the given object / key pair"""
-		assert obj is not None
 		# Lookup the most specific path first
 		if path:
+			assert obj is not None
 			try:
 				parent = obj.parent
 			except AttributeError:
@@ -88,9 +88,10 @@ class Style(object):
 				if v is not None:
 					return v
 		else:
-			v = Style._lookup_default(obj, name, tag, key, type(obj).__name__)
-			if v is not None:
-				return v
+			if obj is not None:
+				v = Style._lookup_default(obj, name, tag, key, type(obj).__name__)
+				if v is not None:
+					return v
 			path = '*'
 		if name is not None:
 			try:
