@@ -96,7 +96,7 @@ class Demo(object):
 		iW, iH = self.s_background.int_size()
 
 		close_btn = button.XButton(status_panel_h)
-		close_btn.clicked.connect(self.quit)
+		close_btn.clicked.connect(self.s_background.close)
 		utils.add_top_left(self.s_background, close_btn)
 
 		log_btn = button.TextButton(status_panel_h, status_panel_h, Style(name='i'))
@@ -344,12 +344,6 @@ class Demo(object):
 			else:
 				self.x_show_info('measuring cancelled', inf_normal)
 
-	def quit(self):
-		"""Main window close handler"""
-		gui.quit()
-		if sys.platform != 'win32' and self.style.halt_on_close:
-			os.system('halt')
-
 	def run(self):
 		"""Run GUI and separate worker thread"""
 		app.init()
@@ -357,7 +351,9 @@ class Demo(object):
 			pygame.mouse.set_visible(False)
 		self.show_main_screen()
 		self.worker.start()
-		self.screen.run_event_loop(self.style.max_fps)		
+		self.screen.run_event_loop(self.style.max_fps)
+		if sys.platform != 'win32' and self.screen.top_window() is None and self.style.halt_on_close:
+			os.system('halt')
 		app.fini()
 
 if __name__ == '__main__':

@@ -313,11 +313,19 @@ class Screen(object):
 		else:
 			return None
 
+	def top_window(self):
+		"""Returns topmost window or None if there are no windows"""
+		if self.windows:
+			return self.windows[-1]
+		else:
+			return None
+
 	def show(self, wnd):
 		"""Show given window on the screen"""
 		assert self.surface is not None
-		if self.windows:
-			self.windows[-1].clear_focus()
+		top_wnd = self.top_window()
+		if top_wnd is not None:
+			top_wnd.clear_focus()
 		self.windows.append(wnd)
 		wnd.init(self)
 		wnd.redraw()
@@ -362,7 +370,9 @@ class Screen(object):
 
 	def deliver_mouse_event(self, e):
 		"""Route mouse event to proper window"""
-		self.windows[-1].deliver_mouse_event(e)
+		top_wnd = self.top_window()
+		if top_wnd is not None:
+			top_wnd.deliver_mouse_event(e)
 
 	def deliver_event(self, e):
 		"""Route non-mouse event to proper window"""
@@ -388,6 +398,8 @@ class Screen(object):
 					if e.type == pg.QUIT:
 						return
 				self.refresh()
+				if self.top_window() is None:
+					break
 		finally:
 			self.run_clock = None
 
